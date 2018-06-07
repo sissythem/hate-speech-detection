@@ -1,0 +1,52 @@
+#
+# Project specific excludes
+#
+# Default excludes
+#
+
+# Binaries
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+*.war
+*.ear
+*.sar
+*.class
+
+.directory
+src/main/resources/META-INF/.directory
+target/
+build/
+
+# eclipse project file
+.settings/
+.classpath
+.project
+.idea/
+hate-speech-detection.iml
+
+# Misc
+*.swp
+release.properties
+pom.xml.releaseBackup
+pom.xml.tag
+
+# Project specific
+logs/
+jars/
+database/
+instances/
+graphinstances/
+vectorinstances/
+src/main/resources/META-INF/persistence.xml
+src/main/resources/word2vec/
+src/main/resources/datasets/
+src/main/resources/bow/
+src/main/resources/preprocessing/
+src/main/resources/spelling/
+src/main/resources/ngrams/

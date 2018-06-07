@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1"
+	xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="hate-speech-detection">
+		<class>gr.di.hatespeech.entities.Text</class>
+		<class>gr.di.hatespeech.entities.Feature</class>
+		<class>gr.di.hatespeech.entities.TextFeature</class>
+		<properties>
+			<property name="javax.persistence.jdbc.driver"
+				value="com.mysql.jdbc.Driver" />
+			<property name="javax.persistence.jdbc.url"
+				value="jdbc:mysql://localhost:3306/DATABASE" />
+			<property name="javax.persistence.jdbc.user"
+				value="username" />
+			<property name="javax.persistence.jdbc.password"
+				value="password" />
+
+			<property name="eclipselink.target-server" value="JBoss" />
+			<!-- Uncomment to log all SQL queries executed -->
+			<property name="eclipselink.logging.level.sql" value="FINE" />
+			<property name="eclipselink.logging.parameters" value="true" />
+			<property name="eclipselink.logging.timestamp" value="false" />
+			<property name="eclipselink.logging.session" value="false" />
+			<property name="eclipselink.logging.thread" value="false" />
+			<property name="eclipselink.logging.connection"
+				value="false" />
+			<property name="eclipselink.logging.exceptions" value="true" />
+			<property name="eclipselink.deploy-on-startup" value="True" />
+
+
+		</properties>
+	</persistence-unit>
+</persistence>
