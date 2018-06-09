@@ -68,7 +68,7 @@ public class InstanceGenerator {
 		instances.setClassIndex(0);
 		if (writeToFile) {
 			Utils.FILE_LOGGER.info(startingMessageLog + "Writing instances to file: " + filename);
-			writeToFile(startPath, folderNumber, filename);
+			writeToFile(instances, startPath, folderNumber, filename);
 		}
 		return instances;
 	}
@@ -106,7 +106,7 @@ public class InstanceGenerator {
 	/**
 	 * Writes generated Instances in a file with Arff format
 	 */
-	protected void writeToFile(String startPath, int folderNumber, String filename) {
+	protected void writeToFile(Instances instances, String startPath, int folderNumber, String filename) {
 		try {
 			ArffSaver saver = new ArffSaver();
 			saver.setInstances(instances);
@@ -131,9 +131,6 @@ public class InstanceGenerator {
 	
 	public void mergeAllGeneratedinstances(String startPath, int foldNum, String filename) {
 		try {
-			String[] options = new String[2];
-			options[0] = "-R"; // "range"
-			options[1] = "1";
 			for (int i = 0; i < foldNum; i++) {
 				Utils.FILE_LOGGER.info(startingMessageLog + "Merging instances in fold " + i);
 				
@@ -158,38 +155,52 @@ public class InstanceGenerator {
 				Instances spellingInstances = readInstancesFromFile(startPath + Utils.PATH_SPELLING_INSTANCES, i,
 						filename);
 				
-				bowInstances = removeClassAttribute(options, bowInstances);
-				sentimentInstances = removeClassAttribute(options, sentimentInstances);
-				syntaxInstances = removeClassAttribute(options, syntaxInstances);
-				word2vecInstances = removeClassAttribute(options, word2vecInstances);
-				spellingInstances = removeClassAttribute(options, spellingInstances);
+				bowInstances = removeClassAttribute(bowInstances);
+				sentimentInstances = removeClassAttribute(sentimentInstances);
+				syntaxInstances = removeClassAttribute(syntaxInstances);
+				word2vecInstances = removeClassAttribute(word2vecInstances);
+				spellingInstances = removeClassAttribute(spellingInstances);
 				
 				Utils.FILE_LOGGER.info(startingMessageLog + "Merging graph and bow instances");
-				Instances temp = Instances.mergeInstances(graphInstances, bowInstances);
+				Instances instances = Instances.mergeInstances(graphInstances, bowInstances);
 				Utils.FILE_LOGGER.info(startingMessageLog + "Merging sentiment instances");
-				temp = Instances.mergeInstances(temp, sentimentInstances);
+				instances = Instances.mergeInstances(instances, sentimentInstances);
 				Utils.FILE_LOGGER.info(startingMessageLog + "Merging syntax instances");
-				temp = Instances.mergeInstances(temp, syntaxInstances);
+				instances = Instances.mergeInstances(instances, syntaxInstances);
 				Utils.FILE_LOGGER.info(startingMessageLog + "Merging spelling instances");
-				temp = Instances.mergeInstances(temp, spellingInstances);
+				instances = Instances.mergeInstances(instances, spellingInstances);
 				Utils.FILE_LOGGER.info(startingMessageLog + "Merging word2vec instances");
-				temp = Instances.mergeInstances(temp, word2vecInstances);
+				instances = Instances.mergeInstances(instances, word2vecInstances);
 
-				this.instances = temp;
-				this.writeToFile(startPath + Utils.PATH_ALL_INSTANCES, i, filename);
+				this.writeToFile(instances, startPath + Utils.PATH_ALL_INSTANCES, i, filename);
+				instances = null;
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public Instances removeClassAttribute(String[] options, Instances instances) throws Exception {
-		Remove remove = new Remove();
-		remove.setOptions(options);
-		remove.setInputFormat(instances);
-		instances = Filter.useFilter(instances, remove);
-		return instances;
+	public Instances removeClassAttribute(Instances instances) throws Exception {
+		
+		Remove af = new Remove();
+	    Instances retI = null;
+	    int[] toIgnore = {instances.classIndex()};
+	    try {
+	      af.setAttributeIndicesArray(toIgnore);
+	      af.setInvertSelection(false);
+	      af.setInputFormat(instances);
+	      retI = Filter.useFilter(instances, af);
+	    } catch (Exception e) {
+	      e.printStackTrace();
+	    }
+
+	    return retI;
+	    
+//		Remove remove = new Remove();
+//		remove.setOptions(options);
+//		remove.setInputFormat(instances);
+//		instances = Filter.useFilter(instances, remove);
+//		return instances;
 	}
 
 	public Instances getInstances() {

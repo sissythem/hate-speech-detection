@@ -41,8 +41,8 @@ public class NgramGenerator {
 	
 	private void mergeInstances() {
 		InstanceGenerator instanceGenerator = new InstanceGenerator();
-		instanceGenerator.mergeAllGeneratedinstances("./instances/singlelabel/", 10, "train");
-		instanceGenerator.mergeAllGeneratedinstances("./instances/singlelabel/", 10, "test");
+		instanceGenerator.mergeAllGeneratedinstances("./instances/test/", 10, "train");
+		instanceGenerator.mergeAllGeneratedinstances("./instances/test/", 10, "test");
 	}
 
 	@SuppressWarnings("unchecked")
