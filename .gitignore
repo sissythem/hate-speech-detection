@@ -41,8 +41,6 @@ logs/
 jars/
 database/
 instances/
-graphinstances/
-vectorinstances/
 src/main/resources/META-INF/persistence.xml
 src/main/resources/word2vec/
 src/main/resources/datasets/
