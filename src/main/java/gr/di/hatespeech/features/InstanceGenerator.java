@@ -14,6 +14,8 @@ import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ArffSaver;
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.Remove;
 
 /**
  * This class represents a generator of Weka Instances objects
@@ -128,35 +130,66 @@ public class InstanceGenerator {
 	}
 	
 	public void mergeAllGeneratedinstances(String startPath, int foldNum, String filename) {
-		for(int i=0;i<foldNum; i++) {
-			Utils.FILE_LOGGER.info(startingMessageLog + "Merging instances in fold " + i);
-			Utils.FILE_LOGGER.info(startingMessageLog + "Reading graph instances");
-			Instances graphInstances = readInstancesFromFile(startPath + Utils.PATH_GRAPH_INSTANCES, i, filename);
-			Utils.FILE_LOGGER.info(startingMessageLog + "Reading bow instances");
-			Instances bowInstances = readInstancesFromFile(startPath + Utils.PATH_BOW_INSTANCES, i, filename);
-			Utils.FILE_LOGGER.info(startingMessageLog + "Reading sentiment instances");
-			Instances sentimentInstances = readInstancesFromFile(startPath + Utils.PATH_SENTIMENT_INSTANCES, i, filename);
-			Utils.FILE_LOGGER.info(startingMessageLog + "Reading syntax instances");
-			Instances syntaxInstances = readInstancesFromFile(startPath + Utils.PATH_SYNTAX_INSTANCES, i, filename);
-			Utils.FILE_LOGGER.info(startingMessageLog + "Reading word2vec instances");
-			Instances word2vecInstances = readInstancesFromFile(startPath + Utils.PATH_WORD2VEC_INSTANCES, i, filename);
-			Utils.FILE_LOGGER.info(startingMessageLog + "Reading spelling instances");
-			Instances spellingInstances = readInstancesFromFile(startPath + Utils.PATH_SPELLING_INSTANCES, i, filename);
-			
-			Utils.FILE_LOGGER.info(startingMessageLog + "Merging graph and bow instances");
-			Instances temp = Instances.mergeInstances(graphInstances, bowInstances);
-			Utils.FILE_LOGGER.info(startingMessageLog + "Merging sentiment instances");
-			temp = Instances.mergeInstances(temp, sentimentInstances);
-			Utils.FILE_LOGGER.info(startingMessageLog + "Merging syntax instances");
-			temp = Instances.mergeInstances(temp, syntaxInstances);
-			Utils.FILE_LOGGER.info(startingMessageLog + "Merging spelling instances");
-			temp = Instances.mergeInstances(temp, spellingInstances);
-			Utils.FILE_LOGGER.info(startingMessageLog + "Merging word2vec instances");
-			temp = Instances.mergeInstances(temp, word2vecInstances);
-			
-			this.instances = temp;
-			this.writeToFile(startPath + Utils.PATH_ALL_INSTANCES, i, filename);
+		try {
+			String[] options = new String[2];
+			options[0] = "-R"; // "range"
+			options[1] = "1";
+			for (int i = 0; i < foldNum; i++) {
+				Utils.FILE_LOGGER.info(startingMessageLog + "Merging instances in fold " + i);
+				
+				Utils.FILE_LOGGER.info(startingMessageLog + "Reading graph instances");
+				Instances graphInstances = readInstancesFromFile(startPath + Utils.PATH_GRAPH_INSTANCES, i, filename);
+				
+				Utils.FILE_LOGGER.info(startingMessageLog + "Reading bow instances");
+				Instances bowInstances = readInstancesFromFile(startPath + Utils.PATH_BOW_INSTANCES, i, filename);
+				
+				Utils.FILE_LOGGER.info(startingMessageLog + "Reading sentiment instances");
+				Instances sentimentInstances = readInstancesFromFile(startPath + Utils.PATH_SENTIMENT_INSTANCES, i,
+						filename);
+				
+				Utils.FILE_LOGGER.info(startingMessageLog + "Reading syntax instances");
+				Instances syntaxInstances = readInstancesFromFile(startPath + Utils.PATH_SYNTAX_INSTANCES, i, filename);
+				
+				Utils.FILE_LOGGER.info(startingMessageLog + "Reading word2vec instances");
+				Instances word2vecInstances = readInstancesFromFile(startPath + Utils.PATH_WORD2VEC_INSTANCES, i,
+						filename);
+				
+				Utils.FILE_LOGGER.info(startingMessageLog + "Reading spelling instances");
+				Instances spellingInstances = readInstancesFromFile(startPath + Utils.PATH_SPELLING_INSTANCES, i,
+						filename);
+				
+				bowInstances = removeClassAttribute(options, bowInstances);
+				sentimentInstances = removeClassAttribute(options, sentimentInstances);
+				syntaxInstances = removeClassAttribute(options, syntaxInstances);
+				word2vecInstances = removeClassAttribute(options, word2vecInstances);
+				spellingInstances = removeClassAttribute(options, spellingInstances);
+				
+				Utils.FILE_LOGGER.info(startingMessageLog + "Merging graph and bow instances");
+				Instances temp = Instances.mergeInstances(graphInstances, bowInstances);
+				Utils.FILE_LOGGER.info(startingMessageLog + "Merging sentiment instances");
+				temp = Instances.mergeInstances(temp, sentimentInstances);
+				Utils.FILE_LOGGER.info(startingMessageLog + "Merging syntax instances");
+				temp = Instances.mergeInstances(temp, syntaxInstances);
+				Utils.FILE_LOGGER.info(startingMessageLog + "Merging spelling instances");
+				temp = Instances.mergeInstances(temp, spellingInstances);
+				Utils.FILE_LOGGER.info(startingMessageLog + "Merging word2vec instances");
+				temp = Instances.mergeInstances(temp, word2vecInstances);
+
+				this.instances = temp;
+				this.writeToFile(startPath + Utils.PATH_ALL_INSTANCES, i, filename);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+	}
+
+	public Instances removeClassAttribute(String[] options, Instances instances) throws Exception {
+		Remove remove = new Remove();
+		remove.setOptions(options);
+		remove.setInputFormat(instances);
+		instances = Filter.useFilter(instances, remove);
+		return instances;
 	}
 
 	public Instances getInstances() {
