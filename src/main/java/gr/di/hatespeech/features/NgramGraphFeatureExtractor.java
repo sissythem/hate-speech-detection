@@ -52,7 +52,6 @@ public class NgramGraphFeatureExtractor extends BaseGraphFeatureExtractor {
 	@Override
 	public Map<String, Double> extractFeatures(Text text) {
 		features = new HashMap<>();
-		Utils.FILE_LOGGER.info(startingMessageLog + "Generating features for text " + text.getId());
 		DocumentNGramGraph textGraph = getTextGraph(text, type);
 		NGramCachedGraphComparator ngc = new NGramCachedGraphComparator();
 		CalculatorListener<GraphSimilarity, GraphSimilarity> calc = getCalculatorListener();

@@ -80,7 +80,9 @@ public class InstanceGenerator {
 		List<String> classvalues = new ArrayList<>();
 		classvalues.add(Utils.HATE_SPEECH_LABEL);
 		classvalues.add(Utils.CLEAN_LABEL);
-
+//		classvalues.add(Utils.SEXISM_LABEL);
+//		classvalues.add(Utils.RACISM_LABEL);
+//		classvalues.add(Utils.OFFENSIVE_LANGUAGE_LABEL);
 		Attribute classAttribute = new Attribute("Class", classvalues);
 		attributes.add(classAttribute);
 		for (String key : features.keySet()) {

@@ -118,11 +118,12 @@ public class HateSpeechDetection {
 	 */
 	private void runFolds() throws Exception {
 		int numFolds = Integer.parseInt(config.getProperty(Utils.NUM_FOLDS));
+		String pathToInstances = config.getProperty(Utils.START_PATH_TO_INSTANCES) + Utils.PATH_BOW_INSTANCES;
 		if (config.getProperty(Utils.INSTANCES).equals("new")) {
 			initTotalFolds(numFolds);
 		}
 		if (Boolean.parseBoolean(config.getProperty(Utils.PARALLEL))) {
-			List<FoldRunner> runnables = initThreads(numFolds);
+			List<FoldRunner> runnables = initThreads(numFolds, pathToInstances);
 			Executor exec = Executors.newFixedThreadPool(numFolds);
 			for (int i = 0; i < numFolds; i++) {
 				exec.execute(runnables.get(i));
@@ -130,16 +131,16 @@ public class HateSpeechDetection {
 		} else {
 			for(int i=0;i<numFolds;i++) {
 				Utils.FILE_LOGGER.info(startingMessageLog + "Running fold " + i);
-				FoldRunner fr = new FoldRunner(i, config, existingFeatures, existingTextFeatures, totalFolds, Utils.PATH_SENTIMENT_INSTANCES);
+				FoldRunner fr = new FoldRunner(i, config, existingFeatures, existingTextFeatures, totalFolds, pathToInstances);
 				fr.run();
 			}
 		}
 	}
 	
-	private List<FoldRunner> initThreads(int numFolds) {
+	private List<FoldRunner> initThreads(int numFolds, String pathToInstances) {
 		List<FoldRunner> runnables = new ArrayList<>();
 		for(int i=0; i<numFolds;i++) {
-			 FoldRunner fr = new FoldRunner(i, config, existingFeatures, existingTextFeatures, totalFolds, Utils.PATH_SENTIMENT_INSTANCES);
+			 FoldRunner fr = new FoldRunner(i, config, existingFeatures, existingTextFeatures, totalFolds, pathToInstances);
 			 runnables.add(fr);
 		}
 		return runnables;

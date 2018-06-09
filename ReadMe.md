@@ -1,5 +1,6 @@
 # Dev Instructions
 
+## Files
 * Copy the persistence-example.xml (src/main/resources/META-INF) and rename it as persistence.xml. In this file, 
 change the database name (replace the DATABASE in line 9) and add your credentials in username and password. 
 Finally, you need to add MySQL driver in the project's classpath and configure the project as a JPA project, 
@@ -15,3 +16,29 @@ adding the database source and the driver.
     * word2vec: https://drive.google.com/open?id=1DKPRjQFIPWJIQLOTEUAg-qwTPK2dXujs
 * Also in the root folder of the project create a logs folder to save the program's logs.
 * In case you do not want to produce new instances, you can find the instances I have produced here: https://drive.google.com/open?id=1jOfkrer7K75H7zjJL6PoMH93pBflV6Yd
+
+##Configurations
+
+* twitter4j.properties: file needed in order to download tweets from the one of the two datasets used
+* log4j.properties: file to configure logger
+* config.properties: 
+	* parallel: run folds in parallel
+	* numFolds: configuation used in cross validation to define the folds number
+	* pathToInstances: since we have created instances for the merged dataset and for each dataset separately, define from which folder the program will retrieve the instances, e.g. "./instances/singlelabel/". You need to define only this part of the path, since the remaining is the same in all instances folders.
+	* datasource: you can choose either to access data (texts, features and texts_features) from the database or from csv files
+	* instances: you can either choose "new" to generate new instances or "existing" to use already extracted instances, which will be accessed from arff file
+	* vectorFeatures: same here, you can write "new" to re-generate vector features or use "existing" to access them from the database or the csv. In both cases you should first select new in instances (above) field
+	* graphFeatures: use true/false in order to generate or not graphFeatures (true is meaningless if you have not chosen new instances)
+	* graphType: define if it is ngram or word graph (select true for graphFeatures first)
+	* Below vector features configurations are used only in case you have selected the "new" option in vectorFeatures field:
+		* preprocess: select true or false to define if you want to preprocess your texts
+		* stopwords: in case you have selected to preprocess the texts, define if you want to also remove stopwords
+		* bow: generate or not bow features
+		* word2vec: generate or not word2vec features
+		* aggregationType: define the aggregation type for word2vec features (this means that you have selected true in the above field)
+		* charngram: generate or not charngram features
+		* ngram: generate or not ngram features
+		* spelling: generate or not spelling features
+		* syntax: generate or not syntax features
+	* instancesToFile: in case you have selected to generate new instances, select true or false to define whether the instances will be exported to file or not
+	* Classifiers configuration: define which classifiers will run by selecting true/false in the fields NaiveBayes, LogisticRegression and KNN

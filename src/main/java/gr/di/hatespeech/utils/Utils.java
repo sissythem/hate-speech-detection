@@ -14,27 +14,30 @@ public class Utils {
 	public static final String HATE_SPEECH_LABEL = "HateSpeech";
 	public static final String CLEAN_LABEL = "Clean";
 	public static final String OFFENSIVE_LANGUAGE_LABEL = "OffensiveLanguage";
+	public static final String SEXISM_LABEL = "sexism";
+	public static final String RACISM_LABEL = "Racism";
 	
 	/** Properties **/
+	public static final String PARALLEL = "parallel";
 	public static final String NUM_FOLDS = "numFolds";
+	public static final String START_PATH_TO_INSTANCES = "pathToInstances";
 	public static final String DATASOURCE = "datasource";
 	public static final String INSTANCES = "instances";
 	public static final String PREPROCESS = "preprocess";
 	public static final String STOPWORDS = "stopwords";
 	public static final String VECTOR_FEATURES = "vectorFeatures";
 	public static final String GRAPH_FEATURES = "graphFeatures";
+	public static final String GRAPH_TYPE = "graphType";
 	public static final String FEATURES_KIND = "featuresKind";
 	public static final String BOW = "bow";
 	public static final String WORD2VEC = "word2vec";
+	public static final String AGGREGATION_TYPE = "aggregationType";
 	public static final String CHAR_NGRAM = "charngram";
 	public static final String NGRAM = "ngram";
 	public static final String SPELLING = "spelling";
 	public static final String SYNTAX = "syntax";
-	public static final String GRAPH = "graph";
-	public static final String GRAPH_TYPE = "graphType";
-	public static final String AGGREGATION_TYPE = "aggregationType";
 	public static final String INSTANCES_TO_FILE = "instancesToFile";
-	public static final String PARALLEL = "parallel";
+	
 	
 	/** CSV/Database columns**/
 	public static final String ID = "id";
@@ -76,15 +79,15 @@ public class Utils {
 	public static final String TEXT_FEATURE_FIND_BY_TEXT_AND_FEATURE = "TextFeature.findByTextAndFeature";
 	
 	/** Path to instances files **/
-	public static final String PATH_ALL_INSTANCES = "./instances/fold";
-	public static final String PATH_GRAPH_INSTANCES = "./graphinstances/fold";
-	public static final String PATH_BOW_INSTANCES = "./vectorinstances/bow/fold";
-	public static final String PATH_WORD2VEC_INSTANCES = "./vectorinstances/word2vec/fold";
-	public static final String PATH_SYNTAX_INSTANCES = "./vectorinstances/syntax/fold";
-	public static final String PATH_SPELLING_INSTANCES = "./vectorinstances/spelling/fold";
-	public static final String PATH_SENTIMENT_INSTANCES = "./vectorinstances/sentiment/fold";
-	public static final String PATH_NGRAM_INSTANCES = "./vectorinstances/ngrams/fold";
-	public static final String PATH_CHARNGRAM_INSTANCES = "./vectorinstances/charngrams/fold";
+	public static final String PATH_ALL_INSTANCES = "all/fold";
+	public static final String PATH_GRAPH_INSTANCES = "graph/fold";
+	public static final String PATH_BOW_INSTANCES = "vector/bow/fold";
+	public static final String PATH_WORD2VEC_INSTANCES = "vector/word2vec/fold";
+	public static final String PATH_SYNTAX_INSTANCES = "vector/syntax/fold";
+	public static final String PATH_SPELLING_INSTANCES = "vector/spelling/fold";
+	public static final String PATH_SENTIMENT_INSTANCES = "vector/sentiment/fold";
+	public static final String PATH_NGRAM_INSTANCES = "vector/ngrams/fold";
+	public static final String PATH_CHARNGRAM_INSTANCES = "vector/charngrams/fold";
 	
 	/** Files **/
 	public static final String TEST_INSTACES_FILE = "test";
