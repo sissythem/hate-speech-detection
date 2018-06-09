@@ -171,7 +171,7 @@ public class InstanceGenerator {
 				instances = Instances.mergeInstances(instances, spellingInstances);
 				Utils.FILE_LOGGER.info(startingMessageLog + "Merging word2vec instances");
 				instances = Instances.mergeInstances(instances, word2vecInstances);
-
+				instances.setClassIndex(0);
 				this.writeToFile(instances, startPath + Utils.PATH_ALL_INSTANCES, i, filename);
 				instances = null;
 			}
