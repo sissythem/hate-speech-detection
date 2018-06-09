@@ -36,6 +36,7 @@ public class NaiveBayesClassifier extends BaseClassifier {
 	public ClassificationEvaluation crossValidate(Instances trainingInstances) {
 		this.naiveBayes = new NaiveBayes();
 		initEvaluation(Utils.NAIVE_BAYES_CLASSIFIER);
+		trainingInstances.randomize(new Random());
 		try {
 			naiveBayes.buildClassifier(trainingInstances);
 			Utils.FILE_LOGGER.info(startingMessageLog + "Training NaiveBayes classifier");
@@ -65,6 +66,8 @@ public class NaiveBayesClassifier extends BaseClassifier {
 	public ClassificationEvaluation classify(Instances trainingInstances, Instances testInstances) {
 		this.naiveBayes = new NaiveBayes();
 		initEvaluation(Utils.NAIVE_BAYES_CLASSIFIER);
+		trainingInstances.randomize(new Random());
+		testInstances.randomize(new Random());
 		try {
 			Utils.FILE_LOGGER.info(startingMessageLog + "Building classifier");
 			naiveBayes.buildClassifier(trainingInstances);

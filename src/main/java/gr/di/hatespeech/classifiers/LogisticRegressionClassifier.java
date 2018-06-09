@@ -36,6 +36,7 @@ public class LogisticRegressionClassifier extends BaseClassifier {
 	public ClassificationEvaluation crossValidate(Instances trainingInstances) {
 		this.lrClassifier = new Logistic();
 		initEvaluation(Utils.LOGISTIC_REGRESSION_CLASSIFIER);
+		trainingInstances.randomize(new Random());
 		try {
 			lrClassifier.buildClassifier(trainingInstances);
 			Utils.FILE_LOGGER.info(startingMessageLog + "Training LogisticRegression classifier");
@@ -65,6 +66,8 @@ public class LogisticRegressionClassifier extends BaseClassifier {
 	public ClassificationEvaluation classify(Instances trainingInstances, Instances testInstances) {
 		this.lrClassifier = new Logistic();
 		initEvaluation(Utils.LOGISTIC_REGRESSION_CLASSIFIER);
+		trainingInstances.randomize(new Random());
+		testInstances.randomize(new Random());
 		try {
 			Utils.FILE_LOGGER.info(startingMessageLog + "Building classifier");
 			lrClassifier.buildClassifier(trainingInstances);

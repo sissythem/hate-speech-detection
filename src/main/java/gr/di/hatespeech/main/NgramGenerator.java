@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 import gr.di.hatespeech.entities.Text;
+import gr.di.hatespeech.features.InstanceGenerator;
 import gr.di.hatespeech.repositories.TextRepository;
 import gr.di.hatespeech.utils.Logger;
 import gr.di.hatespeech.utils.LoggerFactory;
@@ -32,9 +33,16 @@ public class NgramGenerator {
 	
 	public static void main(String[] args) {
 		NgramGenerator ngramGenerator = new NgramGenerator();
-		 ngramGenerator.getAllNgrams();
-		 ngramGenerator.produceAllCharNGrams();
-		 ngramGenerator.read();
+		ngramGenerator.mergeInstances();
+//		 ngramGenerator.getAllNgrams();
+//		 ngramGenerator.produceAllCharNGrams();
+//		 ngramGenerator.read();
+	}
+	
+	private void mergeInstances() {
+		InstanceGenerator instanceGenerator = new InstanceGenerator();
+		instanceGenerator.mergeAllGeneratedinstances("./instances/singlelabel/", 10, "train");
+		instanceGenerator.mergeAllGeneratedinstances("./instances/singlelabel/", 10, "test");
 	}
 
 	@SuppressWarnings("unchecked")

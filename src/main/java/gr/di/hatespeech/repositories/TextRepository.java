@@ -62,6 +62,12 @@ public class TextRepository extends AbstractRepository<Text> {
 		parameters.put("label", label);
 		return namedQuery(em, Utils.TEXT_FIND_BY_LABEL, parameters);
 	}
+	
+	public List<Text> findTextsByOldLabel(String oldLabel) {
+		HashMap<String, Object> parameters = new HashMap<>();
+		parameters.put("oldLabel", oldLabel);
+		return namedQuery(em, Utils.TEXT_FIND_BY_OLD_LABEL, parameters);
+	}
 
 	public EntityManager getEm() {
 		return em;

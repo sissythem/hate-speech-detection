@@ -20,7 +20,7 @@ public class Utils {
 	/** Properties **/
 	public static final String PARALLEL = "parallel";
 	public static final String NUM_FOLDS = "numFolds";
-	public static final String START_PATH_TO_INSTANCES = "pathToInstances";
+	public static final String START_PATH_TO_INSTANCES = "startPathToInstances";
 	public static final String DATASOURCE = "datasource";
 	public static final String INSTANCES = "instances";
 	public static final String PREPROCESS = "preprocess";
@@ -66,6 +66,7 @@ public class Utils {
 	public static final String TEXT_FIND_ALL = "Text.findAll";
 	public static final String TEXT_FIND_BY_ID = "Text.findById";
 	public static final String TEXT_FIND_BY_LABEL = "Text.findByLabel";
+	public static final String TEXT_FIND_BY_OLD_LABEL = "Text.findByOldLabel";
 	
 	public static final String FEATURE_FIND_ALL = "Feature.findAll";
 	public static final String FEATURE_FIND_BY_ID = "Feature.findById";

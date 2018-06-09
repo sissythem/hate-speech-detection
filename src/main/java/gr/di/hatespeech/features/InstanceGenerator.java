@@ -44,10 +44,10 @@ public class InstanceGenerator {
 	 * @param filename
 	 * @return Instances
 	 */
-	public Instances generateInstances(List<Map<String, Double>> features, List<String> labels, Boolean writeToFile,
+	public Instances generateInstances(List<Map<String, Double>> features, List<String> labels, int dataset, Boolean writeToFile,
 			String startPath, int folderNumber, String filename) {
 		Utils.FILE_LOGGER.info(startingMessageLog + "Generating attribtues");
-		generateAttributes(features.get(0));
+		generateAttributes(features.get(0), dataset);
 		instances = new Instances("tweets", attributes, 0);
 		Utils.FILE_LOGGER.info(startingMessageLog + "Creating instances");
 		for (int i = 0; i < features.size(); i++) {
@@ -75,14 +75,25 @@ public class InstanceGenerator {
 	 * Initializes an ArrayList of attributes based on the given features
 	 * @param features
 	 */
-	protected void generateAttributes(Map<String, Double> features) {
+	protected void generateAttributes(Map<String, Double> features, int dataset) {
 		attributes = new ArrayList<>();
 		List<String> classvalues = new ArrayList<>();
-		classvalues.add(Utils.HATE_SPEECH_LABEL);
-		classvalues.add(Utils.CLEAN_LABEL);
-//		classvalues.add(Utils.SEXISM_LABEL);
-//		classvalues.add(Utils.RACISM_LABEL);
-//		classvalues.add(Utils.OFFENSIVE_LANGUAGE_LABEL);
+		switch(dataset) {
+		case -1:
+			classvalues.add(Utils.HATE_SPEECH_LABEL);
+			classvalues.add(Utils.CLEAN_LABEL);
+			break;
+		case 0:
+			classvalues.add(Utils.RACISM_LABEL);
+			classvalues.add(Utils.SEXISM_LABEL);
+			classvalues.add(Utils.CLEAN_LABEL);
+			break;
+		case 1:
+			classvalues.add(Utils.HATE_SPEECH_LABEL);
+			classvalues.add(Utils.OFFENSIVE_LANGUAGE_LABEL);
+			classvalues.add(Utils.CLEAN_LABEL);
+			break;
+		}
 		Attribute classAttribute = new Attribute("Class", classvalues);
 		attributes.add(classAttribute);
 		for (String key : features.keySet()) {
@@ -116,21 +127,21 @@ public class InstanceGenerator {
 		}
 	}
 	
-	public void mergeAllGeneratedinstances(int foldNum, String filename) {
+	public void mergeAllGeneratedinstances(String startPath, int foldNum, String filename) {
 		for(int i=0;i<foldNum; i++) {
 			Utils.FILE_LOGGER.info(startingMessageLog + "Merging instances in fold " + i);
 			Utils.FILE_LOGGER.info(startingMessageLog + "Reading graph instances");
-			Instances graphInstances = readInstancesFromFile(Utils.PATH_GRAPH_INSTANCES, i, filename);
+			Instances graphInstances = readInstancesFromFile(startPath + Utils.PATH_GRAPH_INSTANCES, i, filename);
 			Utils.FILE_LOGGER.info(startingMessageLog + "Reading bow instances");
-			Instances bowInstances = readInstancesFromFile(Utils.PATH_BOW_INSTANCES, i, filename);
+			Instances bowInstances = readInstancesFromFile(startPath + Utils.PATH_BOW_INSTANCES, i, filename);
 			Utils.FILE_LOGGER.info(startingMessageLog + "Reading sentiment instances");
-			Instances sentimentInstances = readInstancesFromFile(Utils.PATH_SENTIMENT_INSTANCES, i, filename);
+			Instances sentimentInstances = readInstancesFromFile(startPath + Utils.PATH_SENTIMENT_INSTANCES, i, filename);
 			Utils.FILE_LOGGER.info(startingMessageLog + "Reading syntax instances");
-			Instances syntaxInstances = readInstancesFromFile(Utils.PATH_SYNTAX_INSTANCES, i, filename);
+			Instances syntaxInstances = readInstancesFromFile(startPath + Utils.PATH_SYNTAX_INSTANCES, i, filename);
 			Utils.FILE_LOGGER.info(startingMessageLog + "Reading word2vec instances");
-			Instances word2vecInstances = readInstancesFromFile(Utils.PATH_WORD2VEC_INSTANCES, i, filename);
+			Instances word2vecInstances = readInstancesFromFile(startPath + Utils.PATH_WORD2VEC_INSTANCES, i, filename);
 			Utils.FILE_LOGGER.info(startingMessageLog + "Reading spelling instances");
-			Instances spellingInstances = readInstancesFromFile(Utils.PATH_SPELLING_INSTANCES, i, filename);
+			Instances spellingInstances = readInstancesFromFile(startPath + Utils.PATH_SPELLING_INSTANCES, i, filename);
 			
 			Utils.FILE_LOGGER.info(startingMessageLog + "Merging graph and bow instances");
 			Instances temp = Instances.mergeInstances(graphInstances, bowInstances);
@@ -144,7 +155,7 @@ public class InstanceGenerator {
 			temp = Instances.mergeInstances(temp, word2vecInstances);
 			
 			this.instances = temp;
-			this.writeToFile(Utils.PATH_ALL_INSTANCES, i, filename);
+			this.writeToFile(startPath + Utils.PATH_ALL_INSTANCES, i, filename);
 		}
 	}
 

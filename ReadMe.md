@@ -24,7 +24,8 @@ adding the database source and the driver.
 * config.properties: 
 	* parallel: run folds in parallel
 	* numFolds: configuation used in cross validation to define the folds number
-	* pathToInstances: since we have created instances for the merged dataset and for each dataset separately, define from which folder the program will retrieve the instances, e.g. "./instances/singlelabel/". You need to define only this part of the path, since the remaining is the same in all instances folders.
+	* dataset: select -1 to include all texts and run the program as single label supervised learning, otherwise choose only one of the two datasets (put 0 or 1) to select only one dataset and run the program as multi label supervised learning
+	* pathToInstances: since we have created instances for the merged dataset and for each dataset separately, define from which folder the program will retrieve the instances, e.g. "./instances/singlelabel/". You need to define only this part of the path, since the remaining is the same in all instances folders. The path is associated with the previous field.
 	* datasource: you can choose either to access data (texts, features and texts_features) from the database or from csv files
 	* instances: you can either choose "new" to generate new instances or "existing" to use already extracted instances, which will be accessed from arff file
 	* vectorFeatures: same here, you can write "new" to re-generate vector features or use "existing" to access them from the database or the csv. In both cases you should first select new in instances (above) field

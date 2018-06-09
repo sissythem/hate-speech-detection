@@ -27,6 +27,7 @@ public class KNNClassifier extends BaseClassifier {
 		Utils.FILE_LOGGER.info(startingMessageLog + "Training KNN classifier");
 		int k = (int) Math.ceil(Math.sqrt(trainingInstances.numInstances()));
 		this.knn = new IBk(k);
+		trainingInstances.randomize(new Random());
 		try {
 			knn.buildClassifier(trainingInstances);
 			for(int i=1; i<=runs;i++) {
@@ -58,6 +59,8 @@ public class KNNClassifier extends BaseClassifier {
 		this.knn = new IBk(k);
 		try {
 			Utils.FILE_LOGGER.info(startingMessageLog + "Building classifier");
+			trainingInstances.randomize(new Random());
+			testInstances.randomize(new Random());
 			knn.buildClassifier(trainingInstances);
 			Evaluation trainEval = new Evaluation(trainingInstances);
 			evaluation.setTrainEval(trainEval);

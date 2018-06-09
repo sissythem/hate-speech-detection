@@ -29,7 +29,8 @@ import gr.di.hatespeech.utils.Utils;
 @NamedQueries({ 
 	@NamedQuery(name = Utils.TEXT_FIND_ALL, query = "SELECT t FROM Text t"),
 	@NamedQuery(name = Utils.TEXT_FIND_BY_ID, query = "SELECT t FROM Text t WHERE t.id = :id"),
-	@NamedQuery(name = Utils.TEXT_FIND_BY_LABEL, query = "SELECT t FROM Text t WHERE t.label = :label") 
+	@NamedQuery(name = Utils.TEXT_FIND_BY_LABEL, query = "SELECT t FROM Text t WHERE t.label = :label"),
+	@NamedQuery(name=Utils.TEXT_FIND_BY_OLD_LABEL, query = "SELECT t FROM Text t WHERE t.oldLabel = :oldLabel")
 })
 public class Text implements Serializable {
 	@Id
