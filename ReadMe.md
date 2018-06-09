@@ -17,7 +17,7 @@ adding the database source and the driver.
 * Also in the root folder of the project create a logs folder to save the program's logs.
 * In case you do not want to produce new instances, you can find the instances I have produced here: https://drive.google.com/open?id=1jOfkrer7K75H7zjJL6PoMH93pBflV6Yd
 
-##Configurations
+## Configurations
 
 * twitter4j.properties: file needed in order to download tweets from the one of the two datasets used
 * log4j.properties: file to configure logger
