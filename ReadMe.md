@@ -21,16 +21,20 @@ adding the database source and the driver.
 
 * twitter4j.properties: file needed in order to download tweets from the one of the two datasets used
 * log4j.properties: file to configure logger
+* emailConfig-example.properties: rename this file to emailConfig.properties and define your own properties to get notified when execution of the program is finished
 * config.properties: 
 	* parallel: run folds in parallel
 	* numFolds: configuation used in cross validation to define the folds number
+	* runs: used only for cross validation classificationType. Defines how many times cross validation will be executed
 	* dataset: select -1 to include all texts and run the program as single label supervised learning, otherwise choose only one of the two datasets (put 0 or 1) to select only one dataset and run the program as multi label supervised learning
+	* instances: you can either choose "new" to generate new instances or "existing" to use already extracted instances, which will be accessed from arff file
 	* pathToInstances: since we have created instances for the merged dataset and for each dataset separately, define from which folder the program will retrieve the instances, e.g. "./instances/singlelabel/". You need to define only this part of the path, since the remaining is the same in all instances folders. The path is associated with the previous field.
 	* datasource: you can choose either to access data (texts, features and texts_features) from the database or from csv files
-	* instances: you can either choose "new" to generate new instances or "existing" to use already extracted instances, which will be accessed from arff file
 	* vectorFeatures: same here, you can write "new" to re-generate vector features or use "existing" to access them from the database or the csv. In both cases you should first select new in instances (above) field
 	* graphFeatures: use true/false in order to generate or not graphFeatures (true is meaningless if you have not chosen new instances)
 	* graphType: define if it is ngram or word graph (select true for graphFeatures first)
+	* featuresKind: it is related to vector features. One can select "all" or a specific kind (e.g. bow, ngrams etc)
+	* instancesToFile: in case you have selected to generate new instances, select true or false to define whether the instances will be exported to file or not
 	* Below vector features configurations are used only in case you have selected the "new" option in vectorFeatures field:
 		* preprocess: select true or false to define if you want to preprocess your texts
 		* stopwords: in case you have selected to preprocess the texts, define if you want to also remove stopwords
@@ -41,5 +45,5 @@ adding the database source and the driver.
 		* ngram: generate or not ngram features
 		* spelling: generate or not spelling features
 		* syntax: generate or not syntax features
-	* instancesToFile: in case you have selected to generate new instances, select true or false to define whether the instances will be exported to file or not
+	* classificationType: select either "classification" or "crossValidation"
 	* Classifiers configuration: define which classifiers will run by selecting true/false in the fields NaiveBayes, LogisticRegression and KNN
