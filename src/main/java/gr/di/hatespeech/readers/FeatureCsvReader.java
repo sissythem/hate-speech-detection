@@ -14,7 +14,7 @@ public class FeatureCsvReader extends CsvReader<List<Feature>> {
 	
 	/**
 	 * Reads data from a file and creates a List of Feature objects
-	 * @param file
+	 * @param fileName, the name of the file to read
 	 * @return Text
 	 */
 	@Override

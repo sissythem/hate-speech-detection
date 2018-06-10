@@ -1,7 +1,5 @@
 package gr.di.hatespeech.main;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +10,6 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.log4j.PropertyConfigurator;
 
 import gr.di.hatespeech.entities.Feature;
 import gr.di.hatespeech.entities.Text;
@@ -33,11 +30,11 @@ import gr.di.hatespeech.utils.Utils;
 public class HateSpeechDetection {
 	private static String startingMessageLog = "[" + HateSpeechDetection.class.getSimpleName() + "] ";
 
-	protected Properties config;
-	protected Properties emailConfig;
-	protected Map<Integer, List<Text>> totalFolds = new HashMap<>();
-	protected List<Feature> existingFeatures = new ArrayList<>();
-	protected List<TextFeature> existingTextFeatures = new ArrayList<>();
+	private Properties config;
+	private Properties emailConfig;
+	private Map<Integer, List<Text>> totalFolds = new HashMap<>();
+	private List<Feature> existingFeatures = new ArrayList<>();
+	private List<TextFeature> existingTextFeatures = new ArrayList<>();
 
 	public static void main(String[] args) {
 		try {
@@ -53,8 +50,16 @@ public class HateSpeechDetection {
 					&& hsd.config.getProperty(Utils.VECTOR_FEATURES).equals("existing")) {
 				hsd.generateExistingFeatures();
 			}
-			// run the folds
-			hsd.runFolds();
+			String classificationType = hsd.config.getProperty(Utils.CLASSIFICATION_TYPE);
+			switch (classificationType) {
+				case "classification":
+					hsd.runFolds();
+					break;
+				case "crossValidation":
+					// TODO implement cross validation
+					break;
+			}
+
 			Utils.FILE_LOGGER.info(startingMessageLog + "PROGRAM FINISH");
 			Utils.FILE_LOGGER.info(startingMessageLog + "==================");
 			EmailSender.Send(hsd.emailConfig);
@@ -67,7 +72,7 @@ public class HateSpeechDetection {
 	/**
 	 * Read existing features from database or csv
 	 */
-	protected void generateExistingFeatures() {
+	private void generateExistingFeatures() {
 		if (config.getProperty(Utils.DATASOURCE).equals("database")) {
 			retrieveFeaturesFromDatabase();
 		} else if (config.getProperty(Utils.DATASOURCE).equals("csv")) {
@@ -75,7 +80,10 @@ public class HateSpeechDetection {
 		}
 	}
 
-	public void retrieveFeaturesFromDatabase() {
+	/**
+	 * Initialize Features and TextFeatures from database
+	 */
+	private void retrieveFeaturesFromDatabase() {
 		FeatureRepository featureRepo = new FeatureRepository();
 		existingFeatures = new ArrayList<>();
 		existingTextFeatures = new ArrayList<>();
@@ -84,7 +92,7 @@ public class HateSpeechDetection {
 		} else {
 			existingFeatures = featureRepo.findFeatureByKind(config.getProperty(Utils.FEATURES_KIND));
 		}
-		existingFeatures.stream().forEach(feature -> {
+		existingFeatures.forEach(feature -> {
 			TextFeatureRepository tfr = new TextFeatureRepository();
 			List<TextFeature> tfs = tfr.findTextFeatureByFeature(feature.getId());
 			if(!CollectionUtils.isEmpty(tfs)) {
@@ -93,7 +101,10 @@ public class HateSpeechDetection {
 		});
 	}
 
-	public void retrieveFeaturesFromCsv() {
+	/**
+	 * Initialize Features and TextFeatures from csv
+	 */
+	private void retrieveFeaturesFromCsv() {
 		FeatureCsvReader featureReader = new FeatureCsvReader();
 		existingFeatures = featureReader.readData(Utils.FEATURES_CSV_PATH);
 		if (!config.getProperty(Utils.FEATURES_KIND).equals("all")) {
@@ -106,10 +117,9 @@ public class HateSpeechDetection {
 	}
 
 	/**
-	 * Execute classification
-	 * @throws Exception
+	 * Execute classification for all folds
 	 */
-	protected void runFolds() throws Exception {
+	private void runFolds() {
 		int numFolds = Integer.parseInt(config.getProperty(Utils.NUM_FOLDS));
 		String pathToInstances = getPathToInstances();
 		
@@ -135,15 +145,16 @@ public class HateSpeechDetection {
 	
 	/**
 	 * Get data per fold
-	 * @param numFolds
+	 * @param numFolds, total number of folds
+	 * @param dataset, selected dataset (-1, 0 or 1)
 	 */
-	protected void initTotalFolds(int numFolds, int dataset) {
+	private void initTotalFolds(int numFolds, int dataset) {
 		String datasource = config.getProperty(Utils.DATASOURCE);
 		NfoldDatasetSplitter nfoldDatasetSplitter = new NfoldDatasetSplitter(numFolds, datasource, dataset);
 		totalFolds.putAll(nfoldDatasetSplitter.getTotalFolds());
 	}
-	
-	protected List<FoldRunner> initThreads(int numFolds, String pathToInstances) {
+
+	private List<FoldRunner> initThreads(int numFolds, String pathToInstances) {
 		List<FoldRunner> runnables = new ArrayList<>();
 		for(int i=0; i<numFolds;i++) {
 			 FoldRunner fr = new FoldRunner(i, config, existingFeatures, existingTextFeatures, totalFolds, pathToInstances);
@@ -151,8 +162,13 @@ public class HateSpeechDetection {
 		}
 		return runnables;
 	}
-	
-	protected String getPathToInstances() {
+
+	/**
+	 * Get path to the instances combining the start path from the config file
+	 * and the vector/graph features selected kind
+	 * @return a String with the path to the instances
+	 */
+	private String getPathToInstances() {
 		String pathToInstances = config.getProperty(Utils.START_PATH_TO_INSTANCES);
 		if (!config.getProperty(Utils.VECTOR_FEATURES).equals("none")) {
 			String featuresKind = config.getProperty(Utils.FEATURES_KIND);

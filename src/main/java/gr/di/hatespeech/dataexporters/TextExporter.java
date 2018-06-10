@@ -30,7 +30,7 @@ import gr.di.hatespeech.utils.Utils;
 public class TextExporter implements DataExporter<Text> {
 	private static String startingMessageLog = "[" + TextExporter.class.getSimpleName() + "] ";
 	protected static EntityManagerFactory factory;
-	protected CSVWriter csvWriter;
+	private CSVWriter csvWriter;
 
 	public TextExporter() {
 
@@ -43,7 +43,7 @@ public class TextExporter implements DataExporter<Text> {
 	public void exportDataToDatabase(List<Text> texts) {
 		factory = Persistence.createEntityManagerFactory(Utils.PERSISTENCE_UNIT_NAME);
 		EntityManager em = factory.createEntityManager();
-		texts.stream().forEach(text -> {
+		texts.forEach(text -> {
 			em.getTransaction().begin();
 			em.persist(text);
 			em.getTransaction().commit();
@@ -61,7 +61,7 @@ public class TextExporter implements DataExporter<Text> {
 			FileWriter out = new FileWriter(fileName);
 			try (CSVPrinter printer = new CSVPrinter(out, CSVFormat.DEFAULT
 				      .withHeader(headers))) {
-				    	texts.stream().forEach(text -> {
+				    	texts.forEach(text -> {
 							try {
 								printer.printRecord(text.getId(), text.getBody(), text.getLabel(), text.getOldLabel(), text.getDataset(), text.getTweetId());
 							} catch (IOException e) {
@@ -83,17 +83,17 @@ public class TextExporter implements DataExporter<Text> {
 
 		initCsvWriter(fileName, options);
 		addHeaderLineToCsv(headerRecord);
-		texts.stream().forEach(text -> writeTweetsToCsv(text));
+		texts.forEach(text -> writeTweetsToCsv(text));
 		closeCsvWriter();
 	}
 	
 	/**
 	 * Inits the CsvWriter providing the file name and a CsvOptions object
 	 * for the Text object parsing
-	 * @param fileName
-	 * @param options
+	 * @param fileName, a String with the file's name
+	 * @param options, OpenCsv options
 	 */
-	protected void initCsvWriter(String fileName, CsvOptions options) {
+	private void initCsvWriter(String fileName, CsvOptions options) {
 
 		try {
 			Writer writer = Files.newBufferedWriter(Paths.get(fileName));
@@ -104,15 +104,15 @@ public class TextExporter implements DataExporter<Text> {
 		}
 	}
 	
-	protected void closeCsvWriter() {
+	private void closeCsvWriter() {
 		try {
 			this.csvWriter.close();
 		} catch (IOException e) {
 			Utils.FILE_LOGGER.error(startingMessageLog + e.getMessage(),e);
 		}
 	}
-	
-	protected void addHeaderLineToCsv(String[] headerRecord) {
+
+	private void addHeaderLineToCsv(String[] headerRecord) {
 		if(headerRecord==null) {
 				headerRecord = new String[6];
 				headerRecord[0] = Utils.ID;
@@ -125,7 +125,7 @@ public class TextExporter implements DataExporter<Text> {
 		csvWriter.writeNext(headerRecord);
 	}
 
-	protected void writeTweetsToCsv(Text text) {
+	private void writeTweetsToCsv(Text text) {
 		String[] textArray = new String[6];
 		textArray[0] = text.getId().toString();
 		textArray[1] = text.getBody();
@@ -135,15 +135,15 @@ public class TextExporter implements DataExporter<Text> {
 		textArray[5] = text.getTweetId();
 		csvWriter.writeNext(textArray);
 	}
-	
-	protected void removeStopWords() {
+
+	public void removeStopWords() {
 		TextRepository textRepo = new TextRepository();
 		List<Text> texts = textRepo.findAllTexts();
 		TextPreprocessor textPreprocessor = new TextPreprocessor(true, Utils.STOPWORDS_CSV_PATH);
 		texts = textPreprocessor.preprocessTexts(texts);
 		factory = Persistence.createEntityManagerFactory(Utils.PERSISTENCE_UNIT_NAME);
 		EntityManager em = factory.createEntityManager();
-		texts.stream().forEach(text -> {
+		texts.forEach(text -> {
 			em.getTransaction().begin();
 			em.merge(text);
 			em.getTransaction().commit();

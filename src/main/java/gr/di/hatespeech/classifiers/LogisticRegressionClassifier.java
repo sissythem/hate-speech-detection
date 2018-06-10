@@ -4,7 +4,6 @@ import java.util.Random;
 
 import gr.di.hatespeech.entities.ClassificationEvaluation;
 import gr.di.hatespeech.utils.Utils;
-import weka.classifiers.evaluation.Evaluation;
 import weka.classifiers.functions.Logistic;
 import weka.core.Instances;
 
@@ -16,7 +15,7 @@ import weka.core.Instances;
  */
 public class LogisticRegressionClassifier extends BaseClassifier {
 	private static String startingMessageLog = "[" + LogisticRegressionClassifier.class.getSimpleName() + "] ";
-	protected Logistic lrClassifier;
+	private Logistic lrClassifier;
 	
 	/**
 	 * Default constructor
@@ -57,8 +56,8 @@ public class LogisticRegressionClassifier extends BaseClassifier {
 	/**
 	 * Logistic regression classification. Trains the classifier with the trainingInstances
 	 * and evaluates the model with the testInstances.
-	 * @param trainingInstances
-	 * @param testInstances
+	 * @param trainingInstances, instances to train the classifier
+	 * @param testInstances, instances to test the classifier
 	 * @return ClassificationEvaluation result
 	 */
 	@Override

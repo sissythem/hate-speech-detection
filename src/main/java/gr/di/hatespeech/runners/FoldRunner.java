@@ -56,11 +56,11 @@ public class FoldRunner implements Runnable {
 	}
 
 	/**
-	 * Create new instances using InstanceGeneratorRunner
+	 * Create new instances using InstanceClassificationRunner
 	 * @param foldNumber
 	 */
 	protected void generateNewInstances(int foldNumber) {
-		InstanceGeneratorRunner instancesRunner = new InstanceGeneratorRunner(foldNumber, config, existingFeatures, existingTextFeatures, totalFolds, pathToInstances);
+		InstanceClassificationRunner instancesRunner = new InstanceClassificationRunner(foldNumber, config, existingFeatures, existingTextFeatures, totalFolds, pathToInstances);
 		instancesRunner.runGenerateNewInstances();;
 		trainingInstances = instancesRunner.getTrainingInstances();
 		testInstances = instancesRunner.getTestInstances();

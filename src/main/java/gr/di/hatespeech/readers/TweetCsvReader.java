@@ -19,7 +19,7 @@ public class TweetCsvReader extends CsvReader<List<Text>> {
 
 	/**
 	 * Reads data from a file and creates a list of Text objects
-	 * @param file
+	 * @param fileName, the name of the file to read
 	 * @return Text
 	 */
 	@Override

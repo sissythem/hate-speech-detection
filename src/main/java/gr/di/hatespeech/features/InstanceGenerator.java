@@ -39,11 +39,11 @@ public class InstanceGenerator {
 	 * containing vector features and a List with the correct labels (e.g. hate
 	 * speech or not) for all the training texts. If variable writeToFile is true
 	 * the produced instances are saved in a file of arff format
-	 * @param features
-	 * @param labels
-	 * @param writeToFile
-	 * @param folderNumber
-	 * @param filename
+	 * @param features, the features of all instances
+	 * @param labels, the labels of all instances
+	 * @param writeToFile, boolean variable defining if instances will be exported in arff format
+	 * @param folderNumber, the current fold
+	 * @param filename, the name of the file that instances will be exported
 	 * @return Instances
 	 */
 	public Instances generateInstances(List<Map<String, Double>> features, List<String> labels, int dataset, Boolean writeToFile,
@@ -56,7 +56,7 @@ public class InstanceGenerator {
 			Instance instance = new DenseInstance(attributes.size());
 			instance.setValue(attributes.get(0), labels.get(i));
 			Map<String, Double> featureMap = features.get(i);
-			attributes.stream().forEach(attribute -> {
+			attributes.forEach(attribute -> {
 				if (featureMap.containsKey(attribute.name())) {
 					instance.setValue(attribute, featureMap.get(attribute.name()));
 				}
@@ -75,9 +75,10 @@ public class InstanceGenerator {
 
 	/**
 	 * Initializes an ArrayList of attributes based on the given features
-	 * @param features
+	 * @param features, all existing features
+	 * @param dataset, specific dataset
 	 */
-	protected void generateAttributes(Map<String, Double> features, int dataset) {
+	private void generateAttributes(Map<String, Double> features, int dataset) {
 		attributes = new ArrayList<>();
 		List<String> classvalues = new ArrayList<>();
 		switch(dataset) {
@@ -105,8 +106,12 @@ public class InstanceGenerator {
 	
 	/**
 	 * Writes generated Instances in a file with Arff format
+	 * @param instances, the instances to be exported in arff format
+	 * @param startPath, the initial path to the instances
+	 * @param folderNumber, the current fold
+	 * @param filename, the name of the arff file
 	 */
-	protected void writeToFile(Instances instances, String startPath, int folderNumber, String filename) {
+	private void writeToFile(Instances instances, String startPath, int folderNumber, String filename) {
 		try {
 			ArffSaver saver = new ArffSaver();
 			saver.setInstances(instances);
@@ -116,7 +121,14 @@ public class InstanceGenerator {
 			Utils.FILE_LOGGER.error(startingMessageLog + e.getMessage(),e);
 		}
 	}
-	
+
+	/**
+	 * Reads an arff file containing instances
+	 * @param startPath, the initial path to the arff file
+	 * @param folderNumber, the current fold
+	 * @param filename, the file to be read
+	 * @return instances
+	 */
 	public Instances readInstancesFromFile(String startPath, int folderNumber, String filename) {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(new File(startPath + folderNumber + "/" + filename)));
@@ -128,7 +140,13 @@ public class InstanceGenerator {
 			return null;
 		}
 	}
-	
+
+	/**
+	 * Merge all types of instances
+	 * @param startPath, the initial path
+	 * @param foldNum, the current fold
+	 * @param filename, the file name where merged instances will be exported
+	 */
 	public void mergeAllGeneratedinstances(String startPath, int foldNum, String filename) {
 		try {
 			for (int i = 0; i < foldNum; i++) {
@@ -180,7 +198,7 @@ public class InstanceGenerator {
 		}
 	}
 
-	public Instances removeClassAttribute(Instances instances) throws Exception {
+	private Instances removeClassAttribute(Instances instances) {
 		
 		Remove af = new Remove();
 	    Instances retI = null;
@@ -195,12 +213,6 @@ public class InstanceGenerator {
 	    }
 
 	    return retI;
-	    
-//		Remove remove = new Remove();
-//		remove.setOptions(options);
-//		remove.setInputFormat(instances);
-//		instances = Filter.useFilter(instances, remove);
-//		return instances;
 	}
 
 	public Instances getInstances() {

@@ -14,8 +14,7 @@ public class TextFeatureCsvReader extends CsvReader<List<TextFeature>> {
 	private static String startingMessageLog = "[" + TextFeatureCsvReader.class.getSimpleName() + "] ";
 	protected List<TextFeature> textFeatures = new ArrayList<>();
 	protected TweetCsvReader tweetCsvReader = new TweetCsvReader();
-	protected FeatureCsvReader featureCsvReader = new FeatureCsvReader(); 
-	protected List<Text> texts = new ArrayList<>();
+	protected List<Text> texts;
 	protected List<Feature> features = new ArrayList<>();
 	
 	public TextFeatureCsvReader() {
@@ -24,7 +23,7 @@ public class TextFeatureCsvReader extends CsvReader<List<TextFeature>> {
 	}
 	
 	 /** Reads data from a file and creates a List of TextFeature objects
-	 * @param file
+	 * @param fileName, the name of the file to read
 	 * @return Text
 	 */
 	@Override

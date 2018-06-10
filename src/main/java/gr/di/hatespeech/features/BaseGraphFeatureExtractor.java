@@ -64,7 +64,7 @@ public abstract class BaseGraphFeatureExtractor implements FeatureExtractor<Map<
 	 */
 	protected void exportTrainingInstances(List<Text> texts) {
 		if (!CollectionUtils.isEmpty(texts)) {
-			texts.stream().forEach(text -> {
+			texts.forEach(text -> {
 				DocumentNGramGraph textGraph = GraphUtils.getTextGraph(text, type);
 				if (text.getOldLabel().equals(hatePrefix)) {
 					trainingInstancesHate.add(textGraph);

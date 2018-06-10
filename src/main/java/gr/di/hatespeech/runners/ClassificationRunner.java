@@ -73,7 +73,6 @@ public class ClassificationRunner {
 	/**
 	 * Train classifiers with trainingInstances and evaluate them with the
 	 * testInstances
-	 * 
 	 * @param trainingInstances, instances to train the classifier
 	 * @param testInstances, instances to test the classifier
 	 * @return list of ClassificationEvaluation

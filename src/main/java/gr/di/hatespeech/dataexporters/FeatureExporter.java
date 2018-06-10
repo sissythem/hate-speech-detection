@@ -36,7 +36,7 @@ public class FeatureExporter extends AbstractDataExporter<Feature> {
 		Set<String> features = f.keySet();
 		factory = Persistence.createEntityManagerFactory(Utils.PERSISTENCE_UNIT_NAME);
 		EntityManager em = factory.createEntityManager();
-		features.stream().forEach(feature -> {
+		features.forEach(feature -> {
 			Feature feat = new Feature();
 			feat.setDescription(feature);
 			addKind(feat);

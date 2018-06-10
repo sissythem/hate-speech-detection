@@ -35,14 +35,14 @@ public class SpellingFeatureExtractor extends BaseVectorFeatureExtractor {
 	/**
 	 * Extracts features from a given text and returns a HashMap with only one
 	 * Entry: the body of a comment as key and an average edit distance
-	 * @param text
+	 * @param text, the text from which features will be extracted
 	 * @return features in a HashMap
 	 */
 	@Override
 	public Map<String, Double> extractFeatures(Text text) {
 		initContainers();
 		populateEditDistanceList(text);
-		getEditDistanceFeature(text);
+		getEditDistanceFeature();
 		return features;
 	}
 
@@ -53,17 +53,17 @@ public class SpellingFeatureExtractor extends BaseVectorFeatureExtractor {
 
 	/**
 	 * Parse words from text and for each word get the min edit distance
-	 * @param text
+	 * @param text, the text from which features will be extracted
 	 */
 	private void populateEditDistanceList(Text text) {
 		List<String> words = Arrays.asList(text.getPrepMessage().split(" "));
 		Utils.FILE_LOGGER.info(startingMessageLog + "Extracting spelling features for text " + text.getId());
-		words.stream().forEach(word -> getEditDistance(word));
+		words.forEach(word -> getEditDistance(word));
 	}
 
 	/**
 	 * Get edit distance for a given word
-	 * @param word
+	 * @param word, word of the text to calculate Edit Distance
 	 */
 	private void getEditDistance(String word) {
 		Map<String, Double> cache = new ConcurrentHashMap<>();
@@ -73,32 +73,34 @@ public class SpellingFeatureExtractor extends BaseVectorFeatureExtractor {
 	}
 
 	private Set<String> preprocessEnglishWords() {
-		Set<String> candidates = englishWords.stream().map(String::toLowerCase)
+		return englishWords.stream().map(String::toLowerCase)
 				.map(term -> Arrays.stream(term.split(" ")).sorted().collect(Collectors.joining(" ")))
 				.collect(Collectors.toSet());
-		return candidates;
 	}
 
 	private String findMostSimilarWord(String word, Map<String, Double> cache, Set<String> candidates) {
 		if (!candidates.contains(word)) {
-			String mostSimilarWord = candidates.parallelStream().map(String::trim)
+			return candidates.parallelStream().map(String::trim)
 					// add more mappers if needed
 					.filter(s -> !s.equalsIgnoreCase(word))
 					// add more filters if needed
 					.min((a, b) -> Double.compare(cache.computeIfAbsent(a, k -> jaccardDistance.apply(word, k)),
 							cache.computeIfAbsent(b, k -> jaccardDistance.apply(word, k))))
 					.get(); // get the closest match
-			return mostSimilarWord;
 		} else {
 			return word;
 		}
 	}
 
-	private void getEditDistanceFeature(Text text) {
+	private void getEditDistanceFeature() {
 		Double avgEditDistance = getAverageEditDistance();
 		features.put(prefix, avgEditDistance);
 	}
 
+	/**
+	 * Average correct spelling of a text
+	 * @return the average score
+	 */
 	protected Double getAverageEditDistance() {
 		double sum = 0.0;
 		for (Double distance : editDistances) {
@@ -107,6 +109,10 @@ public class SpellingFeatureExtractor extends BaseVectorFeatureExtractor {
 		return sum / editDistances.size();
 	}
 
+	/**
+	 * Read dictionary
+	 * @param fileName, the name of the dictionary file
+	 */
 	protected void getEnglishWordsFromCsvFile(String fileName) {
 		String[] headers = { Utils.WORD};
 		Iterable<CSVRecord> records = CsvReader.getCsvRecords(headers, fileName);

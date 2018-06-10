@@ -5,7 +5,6 @@ import java.util.Random;
 import gr.di.hatespeech.entities.ClassificationEvaluation;
 import gr.di.hatespeech.utils.Utils;
 import weka.classifiers.bayes.NaiveBayes;
-import weka.classifiers.evaluation.Evaluation;
 import weka.core.Instances;
 
 /**
@@ -16,7 +15,7 @@ import weka.core.Instances;
  */
 public class NaiveBayesClassifier extends BaseClassifier {
 	private static String startingMessageLog = "[" + NaiveBayesClassifier.class.getSimpleName() + "] ";
-	protected NaiveBayes naiveBayes;
+	private NaiveBayes naiveBayes;
 
 	/**
 	 * Default constructor. Initialization of weka NaiveBayes classifier
@@ -57,8 +56,8 @@ public class NaiveBayesClassifier extends BaseClassifier {
 	/**
 	 * NaiveBayes classification. Builds the Naive Bayes classifier with the training instances
 	 * and evaluates the classifier with the test Instances
-	 * @param trainingInstances
-	 * @param testInstances
+	 * @param trainingInstances, instances to train the classifier
+	 * @param testInstances, instances to test the classifier
 	 * @return ClassificationEvaluation result
 	 */
 	@Override

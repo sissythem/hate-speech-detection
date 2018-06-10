@@ -22,7 +22,7 @@ public class SourceCsvReader extends CsvReader<List<Text>> {
 
 	/**
 	 * Reads data from a CSV file and creates a Text object
-	 * @param File
+	 * @param fileName, the name of the file to read
 	 * @return Text
 	 */
 	@Override
@@ -31,7 +31,7 @@ public class SourceCsvReader extends CsvReader<List<Text>> {
 		List<String[]> records = getCsvRecords(fileName);
 		if (!CollectionUtils.isEmpty(records)) {
 			texts = new ArrayList<>();
-			records.stream().forEach(record -> {
+			records.forEach(record -> {
 				Text text = createTextFromLine(record);
 				if (text != null) {
 					texts.add(text);

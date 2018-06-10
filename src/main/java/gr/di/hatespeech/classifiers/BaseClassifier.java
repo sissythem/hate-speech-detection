@@ -10,6 +10,7 @@ import java.util.Random;
 public abstract class BaseClassifier implements Classifier {
 
 	private static String startingMessageLog = "[" + BaseClassifier.class.getSimpleName() + "] ";
+
 	protected ClassificationEvaluation evaluation;
 	
 	protected int folds;

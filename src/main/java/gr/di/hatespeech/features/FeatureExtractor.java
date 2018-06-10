@@ -9,8 +9,8 @@ import gr.di.hatespeech.entities.Text;
 public interface FeatureExtractor<T> {
 /**
  * This method gets a Text as input and returns an object with the extracted features
- * @param text
- * @return 
+ * @param text, a text from which features will be extracted
+ * @return T
  */
 	T extractFeatures(Text text);
 }

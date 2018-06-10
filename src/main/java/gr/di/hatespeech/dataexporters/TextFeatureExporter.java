@@ -23,7 +23,6 @@ import gr.di.hatespeech.utils.Utils;
  */
 public class TextFeatureExporter extends AbstractDataExporter<TextFeature>{
 
-	
 	public TextFeatureExporter() {
 		super();
 	}
@@ -36,7 +35,7 @@ public class TextFeatureExporter extends AbstractDataExporter<TextFeature>{
 	public void exportDataToDatabase() {
 		TextRepository textRepo = new TextRepository();
 		List<Text> texts = textRepo.findAllTexts().stream().filter(text -> !StringUtils.isBlank(text.getPrepMessage())).collect(Collectors.toList());
-		texts.stream().forEach(text -> {
+		texts.forEach(text -> {
 			if (!StringUtils.isBlank(text.getPrepMessage())) {
 				Map<String, Double> f = getVectorFeatures(text);
 				FeatureRepository featureRepo = new FeatureRepository();

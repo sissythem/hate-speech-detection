@@ -4,13 +4,12 @@ import java.util.Random;
 
 import gr.di.hatespeech.entities.ClassificationEvaluation;
 import gr.di.hatespeech.utils.Utils;
-import weka.classifiers.evaluation.Evaluation;
 import weka.classifiers.lazy.IBk;
 import weka.core.Instances;
 
 public class KNNClassifier extends BaseClassifier {
 	private static String startingMessageLog = "[" + KNNClassifier.class.getSimpleName() + "] ";
-	protected IBk knn;
+	private IBk knn;
 
 	public KNNClassifier() {
 		super(Utils.KNN_CLASSIFIER);

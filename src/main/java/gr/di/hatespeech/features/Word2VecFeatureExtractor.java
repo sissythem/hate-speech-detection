@@ -21,7 +21,6 @@ import gr.di.hatespeech.utils.Utils;
  * BaseVectorFeatureExtractor Reads pretrained word2vec values from a csv and
  * stores them in a map From this file, it calculates the vector dimension and
  * requires an aggregation type in order to return the features map
- * 
  * @author sissy
  */
 public class Word2VecFeatureExtractor extends BaseVectorFeatureExtractor {
@@ -33,8 +32,7 @@ public class Word2VecFeatureExtractor extends BaseVectorFeatureExtractor {
 	/**
 	 * Word2VecFeatureExtractor constructor. AggregationType defines the aggregation
 	 * of the vector
-	 * 
-	 * @param type
+	 * @param type, aggregation type
 	 */
 	public Word2VecFeatureExtractor(String type, String prefix, String... fileNames) {
 		super(prefix);

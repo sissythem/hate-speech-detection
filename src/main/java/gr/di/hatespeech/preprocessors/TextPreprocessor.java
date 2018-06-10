@@ -38,7 +38,7 @@ public class TextPreprocessor {
 	/**
 	 * Gets a list of Text objects as input and removes stopwords, urls etc from its
 	 * content and then returns an updated list
-	 * @param text
+	 * @param texts, the list of texts to be preprocessed
 	 * @return cleanedText, a List<Text> containing the cleaned texts
 	 */
 	public List<Text> preprocessTexts(List<Text> texts) {

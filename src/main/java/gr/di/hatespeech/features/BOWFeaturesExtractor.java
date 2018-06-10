@@ -38,7 +38,7 @@ public class BOWFeaturesExtractor extends BaseVectorFeatureExtractor {
 		addKeywordsToMap();
 		List<String> words = Arrays.asList(text.getPrepMessage().split(" "));
 		Utils.FILE_LOGGER.info(startingMessageLog + "Extracting bow features for text " + text.getId());
-		words.stream().forEach(word -> checkForHateWord(word));
+		words.forEach(word -> checkForHateWord(word));
 		return features;
 	}
 
@@ -76,14 +76,6 @@ public class BOWFeaturesExtractor extends BaseVectorFeatureExtractor {
 				hateKeywords.add(record.get(Utils.HATE_WORD).toLowerCase());
 			}
 		}
-	}
-
-	public List<String> getHateKeywords() {
-		return hateKeywords;
-	}
-
-	public void setHateKeywords(List<String> hateKeywords) {
-		this.hateKeywords = hateKeywords;
 	}
 
 }

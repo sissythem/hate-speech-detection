@@ -29,7 +29,7 @@ public abstract class CsvReader<T> implements Reader<T> {
 	/**
 	 * Reads data from a given file using OpenCsv library and returns a list with a
 	 * String array. Each array contains a line with all column data
-	 * @param fileName
+	 * @param fileName, the name of the file to read
 	 * @return records, all csv lines
 	 */
 	public static Iterable<CSVRecord> getCsvRecords(String[] headers, String fileName) {

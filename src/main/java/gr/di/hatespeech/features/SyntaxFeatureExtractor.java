@@ -48,7 +48,7 @@ public class SyntaxFeatureExtractor extends BaseVectorFeatureExtractor {
 	 * Extracts syntax features from a given text and returns a HashMap with only
 	 * one Entry: the body of a comment as key and an average of the correct syntax
 	 * as value
-	 * @param text
+	 * @param text, the text to extract features
 	 * @return features in a HashMap
 	 */
 	@Override
@@ -65,7 +65,13 @@ public class SyntaxFeatureExtractor extends BaseVectorFeatureExtractor {
 		features.put(sentimentPrefix, findSentiment(text));
 		return features;
 	}
-	
+
+	/**
+	 * Extracts sentiment feature from a given text and returns the double value
+	 * of the main sentiment
+	 * @param text, the text to extract features
+	 * @return sentiment value
+	 */
 	protected Double findSentiment(Text text) {
 		String tweet = text.getPrepMessage();
 		Properties props = new Properties();
@@ -91,7 +97,13 @@ public class SyntaxFeatureExtractor extends BaseVectorFeatureExtractor {
 		Utils.FILE_LOGGER.info(startingMessageLog + "Sentiment estimation " + mainSentiment + " for text label " + text.getLabel());
 		return Double.valueOf(mainSentiment);
 	}
-	
+
+	/**
+	 * Extracts sentiment feature from a given text and returns the double value
+	 * of the total sentiment rate
+	 * @param text, the text to extract features
+	 * @return sentiment rate
+	 */
 	protected Double getStanfordSentimentRate(Text text) {
 		String sentimentText = text.getPrepMessage();
 		Utils.FILE_LOGGER.info(startingMessageLog + "Extracting sentiment for tweet " + sentimentText);

@@ -1,15 +1,11 @@
 package gr.di.hatespeech.dataexporters;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.persistence.EntityManagerFactory;
-
-import org.apache.log4j.PropertyConfigurator;
 
 import gr.di.hatespeech.entities.Text;
 import gr.di.hatespeech.features.BOWFeaturesExtractor;
@@ -23,24 +19,24 @@ import gr.di.hatespeech.utils.Utils;
 public abstract class AbstractDataExporter<T> implements DataExporter<T> {
 	private static String startingMessageLog = "[" + AbstractDataExporter.class.getSimpleName() + "] ";
 
-	protected Properties config;
+	private Properties config;
 	protected EntityManagerFactory factory;
 
 	/** Feature extractors **/
-	protected BOWFeaturesExtractor bowExtractor;
-	protected Word2VecFeatureExtractor word2vecExtractor;
-	protected NgramFeatureExtractor ngramFeatureExtractor;
-	protected CharacterNGramFeatureExtractor charngramFeatureExtractor;
-	protected SpellingFeatureExtractor spellingFeatureExtractor;
-	protected SyntaxFeatureExtractor syntaxFeatureExtractor;
+	private BOWFeaturesExtractor bowExtractor;
+	private Word2VecFeatureExtractor word2vecExtractor;
+	private NgramFeatureExtractor ngramFeatureExtractor;
+	private CharacterNGramFeatureExtractor charngramFeatureExtractor;
+	private SpellingFeatureExtractor spellingFeatureExtractor;
+	private SyntaxFeatureExtractor syntaxFeatureExtractor;
 	
 	public AbstractDataExporter() {
 		Utils utils = new Utils();
 		config = utils.readConfigurationFile(startingMessageLog, Utils.CONFIG_FILE);
 		initFeatureExtractors();
 	}
-	
-	protected void initFeatureExtractors() {
+
+	private void initFeatureExtractors() {
 		bowExtractor = new BOWFeaturesExtractor(Utils.HATEBASE_CSV_PATH, Utils.BOW_KEY_PREFIX);
 		word2vecExtractor = new Word2VecFeatureExtractor(config.getProperty(Utils.AGGREGATION_TYPE),
 				Utils.WORD2VEC_KEY_PREFIX, Utils.WORD2VEC_SMALL_SER);

@@ -37,7 +37,7 @@ public class TxtReader implements Reader<List<String>> {
 	}
 
 	public List<String> readLines(BufferedReader in) throws IOException {
-		String line = null;
+		String line;
 		while ((line = in.readLine()) != null) {
 			txtLines.add(line);
 		}
@@ -47,8 +47,7 @@ public class TxtReader implements Reader<List<String>> {
 	public BufferedReader getBufferedReader(String fileName) {
 		ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 		InputStream inputStream = classloader.getResourceAsStream(fileName);
-		BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
-		return in;
+		return new BufferedReader(new InputStreamReader(inputStream));
 	}
 
 }

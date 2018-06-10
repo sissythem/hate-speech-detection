@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import gr.di.hatespeech.entities.Text;
 import gr.di.hatespeech.utils.Utils;
 import weka.core.tokenizers.NGramTokenizer;
+import weka.core.tokenizers.Tokenizer;
 
 /**
  * Ngram feature extractor extending the Base Vector Feature Extractor
@@ -43,13 +44,7 @@ public class NgramFeatureExtractor extends BaseVectorFeatureExtractor {
 		Utils.FILE_LOGGER.info(startingMessageLog + "Extracting ngrams for text" + text.getId());
 		List<String> elements = getNgramTokens(text);
 		features = allTokens;
-		elements.stream().forEach(element -> {
-			String key = prefix + element;
-			if (features.containsKey(key)) {
-				features.put(key, features.get(key) + 1);
-				Utils.FILE_LOGGER.debug(startingMessageLog + "Token appears in text: " + features.get(key));
-			}
-		});
+		elements.forEach(element -> addNgramFeature(startingMessageLog, element));
 		return features;
 	}
 
@@ -65,15 +60,7 @@ public class NgramFeatureExtractor extends BaseVectorFeatureExtractor {
 		tokenizer.setNGramMaxSize(3);
 		Utils.FILE_LOGGER.debug(startingMessageLog + "Tokenizing text");
 		tokenizer.tokenize(text.getPrepMessage());
-		List<String> elements = new ArrayList<>();
-		Utils.FILE_LOGGER.debug(startingMessageLog + "Iterating tokens and adding them to list");
-		String token = tokenizer.nextElement();
-		while (!StringUtils.isBlank(token)) {
-			Utils.FILE_LOGGER.debug(startingMessageLog + "Adding element {" + token + "}");
-			elements.add(token);
-			token = tokenizer.nextElement();
-			Utils.FILE_LOGGER.debug(startingMessageLog + "Getting new element {" + token + "}");
-		}
+		List<String> elements = addTokens(startingMessageLog, tokenizer);
 		return elements;
 	}
 

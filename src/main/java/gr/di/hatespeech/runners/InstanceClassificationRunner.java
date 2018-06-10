@@ -18,8 +18,8 @@ import gr.di.hatespeech.features.NgramGraphFeatureExtractor;
 import gr.di.hatespeech.utils.Utils;
 import weka.core.Instances;
 
-public class InstanceGeneratorRunner {
-	private static String startingMessageLog = "[" + InstanceGeneratorRunner.class.getSimpleName() + "] ";
+public class InstanceClassificationRunner {
+	private static String startingMessageLog = "[" + InstanceClassificationRunner.class.getSimpleName() + "] ";
 
 	protected int foldNumber;
 	protected int dataset;
@@ -42,16 +42,16 @@ public class InstanceGeneratorRunner {
 	protected Instances testInstances;
 
 	/**
-	 * InstanceGeneratorRunner constructor
-	 * @param foldNumber
-	 * @param config
-	 * @param existingFeatures
-	 * @param existingTextFeatures
-	 * @param totalFolds
-	 * @param pathToInstances
+	 * InstanceClassificationRunner constructor
+	 * @param foldNumber, the current foldNumber
+	 * @param config, properties with the initial configuration
+	 * @param existingFeatures, features retrieved from datasource
+	 * @param existingTextFeatures, features per text retrieved from datasource
+	 * @param totalFolds, the total number of folds
+	 * @param pathToInstances, the folder path to the instances
 	 */
-	public InstanceGeneratorRunner(int foldNumber, Properties config, List<Feature> existingFeatures,
-			List<TextFeature> existingTextFeatures, Map<Integer,List<Text>> totalFolds, String pathToInstances) {
+	public InstanceClassificationRunner(int foldNumber, Properties config, List<Feature> existingFeatures,
+										List<TextFeature> existingTextFeatures, Map<Integer,List<Text>> totalFolds, String pathToInstances) {
 		super();
 		this.dataset = Integer.parseInt(config.getProperty(Utils.DATASET));
 		this.foldNumber = foldNumber;
@@ -103,8 +103,8 @@ public class InstanceGeneratorRunner {
 	/**
 	 * Generate instances from scratch
 	 * @param i
-	 * @param testTexts
-	 * @param trainingTexts
+	 * @param testTexts, list with the texts to be used for testing classifiers
+	 * @param trainingTexts, list with the texts to be used for training purposes
 	 */
 	protected void generateNewInstances(int dataset, int i, List<Text> testTexts, List<Text> trainingTexts) {
 		initContainers();
@@ -116,8 +116,8 @@ public class InstanceGeneratorRunner {
 
 	/**
 	 * Generate graph and vector features
-	 * @param trainingTexts
-	 * @param testTexts
+	 * @param testTexts, list with the texts to be used for testing classifiers
+	 * @param trainingTexts, list with the texts to be used for training purposes
 	 */
 	protected void generateFeatures(List<Text> trainingTexts, List<Text> testTexts, int dataset) {
 		Utils.FILE_LOGGER.info(startingMessageLog + "Generating graph features: " + config.getProperty(Utils.GRAPH_FEATURES));
@@ -166,8 +166,8 @@ public class InstanceGeneratorRunner {
 
 	/**
 	 * Get a 90% of training instances, to create the two class Graphs
-	 * @param trainingTexts
-	 * @return
+	 * @param trainingTexts, list with the texts to be used for training purposes
+	 * @return, list with the texts to be used for class graphs construction
 	 */
 	protected List<Text> getTrainingDataForGraph(List<Text> trainingTexts) {
 		List<Text> trainingForClassGraph = new ArrayList<>();
@@ -181,8 +181,9 @@ public class InstanceGeneratorRunner {
 
 	/**
 	 * Generate all features (vector and graph) for training texts
-	 * @param text
-	 * @param featuresConfig
+	 * @param text, text from which method will extract features
+	 * @param featuresConfig, define if new features will be generated or retrieve existing ones from datasource
+	 * @return a Map with the features
 	 */
 	protected Map<String, Double> getFeatures(Text text, String featuresConfig) {
 		Map<String, Double> textFeatures = new HashMap<>();
@@ -207,8 +208,9 @@ public class InstanceGeneratorRunner {
 
 	/**
 	 * Get already generated vector features for a specific text
-	 * @param kind
-	 * @param text
+	 * @param kind, specific kind of vector features (e.g. bow, word2vec etc)
+	 * @param text, the text from which features will be extracted
+	 * @return a Map with the features
 	 */
 	protected Map<String, Double> getExistingVectorFeatures(String kind, Text text) {
 		Map<String, Double> textFeatures = initVectorMap();
@@ -241,10 +243,10 @@ public class InstanceGeneratorRunner {
 
 	/**
 	 * Get Weka Instances
-	 * @param allFeatures
-	 * @param allLabels
-	 * @param folderNumber
-	 * @param filename
+	 * @param allFeatures, a list containing a Map for each text
+	 * @param allLabels, a list containing the label of each text
+	 * @param folderNumber, the current fold executing
+	 * @param filename, train or test
 	 * @return
 	 */
 	protected Instances getInstances(List<Map<String, Double>> allFeatures, List<String> allLabels, int dataset, int folderNumber,
@@ -260,16 +262,8 @@ public class InstanceGeneratorRunner {
 		return trainingInstances;
 	}
 
-	public void setTrainingInstances(Instances trainingInstances) {
-		this.trainingInstances = trainingInstances;
-	}
-
 	public Instances getTestInstances() {
 		return testInstances;
-	}
-
-	public void setTestInstances(Instances testInstances) {
-		this.testInstances = testInstances;
 	}
 
 }
