@@ -15,7 +15,7 @@ public class SpellingFeatureExtractorTest {
 	private SpellingFeatureExtractor spellingFeatureExtractor = new SpellingFeatureExtractor(Utils.ENGLISH_DICTIONARY_PATH, Utils.SPELLING_KEY_PREFIX);
 	
 	@Test
-	public void test() {
+	public void testSpellingFeatureExtraction() {
 		Text text = new Text();
 		text.setId(1L);
 		text.setDataset(0);
@@ -26,7 +26,7 @@ public class SpellingFeatureExtractorTest {
 		text.setPrepMessage("This is the tweet for test test");
 		Map<String,Double> spellingFeatures = spellingFeatureExtractor.extractFeatures(text);
 		Double expectedValue = 0.19;
-		assertEquals(expectedValue, spellingFeatures.get(Utils.SPELLING_KEY_PREFIX+text.getId()));
+		assertEquals(expectedValue, spellingFeatures.get(Utils.SPELLING_KEY_PREFIX));
 	}
 
 }

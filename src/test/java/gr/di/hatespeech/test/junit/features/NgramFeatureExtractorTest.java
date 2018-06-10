@@ -21,11 +21,11 @@ public class NgramFeatureExtractorTest {
 		text.setLabel("Clean");
 		text.setOldLabel("Clean");
 		text.setTweetId("4565676788787");
-		text.setBody("This is a tweet to be tested tested");
-		text.setPrepMessage("This is a tweet to be tested tested");
+		text.setBody("screen not screen not");
+		text.setPrepMessage("screen not screen not");
 		Map<String,Double> features = ngramFeatureExtractor.extractFeatures(text);
 		features.keySet().stream().forEach(key->System.out.println(key + " " + features.get(key)));
-		Double actualValue = features.get("ngramfeatures/tested");
+		Double actualValue = features.get("ngramfeatures/screen not");
 		Double expectedValue = 2.0;
 		assertEquals(expectedValue.toString(), actualValue.toString());
 	}

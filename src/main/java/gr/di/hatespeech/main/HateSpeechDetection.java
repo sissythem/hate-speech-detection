@@ -9,6 +9,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+import gr.di.hatespeech.runners.InstanceCrossValidationRunner;
 import org.apache.commons.collections.CollectionUtils;
 
 import gr.di.hatespeech.entities.Feature;
@@ -56,7 +57,7 @@ public class HateSpeechDetection {
 					hsd.runFolds();
 					break;
 				case "crossValidation":
-					// TODO implement cross validation
+					hsd.runCrossValidation();
 					break;
 			}
 
@@ -203,6 +204,13 @@ public class HateSpeechDetection {
 			pathToInstances = pathToInstances + Utils.PATH_GRAPH_INSTANCES;
 		}
 		return pathToInstances;
+	}
+
+	private void runCrossValidation() {
+		String pathToInstances = getPathToInstances();
+		int dataset = Integer.parseInt(config.getProperty(Utils.DATASET));
+		InstanceCrossValidationRunner instanceCrossValidationRunner = new InstanceCrossValidationRunner(dataset, config, existingFeatures, existingTextFeatures, pathToInstances);
+		instanceCrossValidationRunner.runCrossValidation();
 	}
 
 }

@@ -41,6 +41,15 @@ public class InstanceClassificationRunner {
 	protected Instances trainingInstances;
 	protected Instances testInstances;
 
+	public InstanceClassificationRunner(int dataset, Properties config, List<Feature> existingFeatures, List<TextFeature> existingTextFeatures, String pathToInstances) {
+		super();
+		this.dataset = dataset;
+		this.config = config;
+		this.existingFeatures = existingFeatures;
+		this.existingTextFeatures = existingTextFeatures;
+		this.pathToInstances = pathToInstances;
+	}
+
 	/**
 	 * InstanceClassificationRunner constructor
 	 * @param foldNumber, the current foldNumber
@@ -124,15 +133,15 @@ public class InstanceClassificationRunner {
 		initGraphFeatureExtractor(trainingTexts, dataset);
 		String vectorFeaturesConfig = config.getProperty(Utils.VECTOR_FEATURES);
 		Utils.FILE_LOGGER.info(startingMessageLog + "Vector instances to create: " + vectorFeaturesConfig);
-		trainingTexts.stream().forEach(text -> {
+		trainingTexts.forEach(text -> {
 			updateFeaturesList(Utils.TRAIN_INSTANCES_FILE, vectorFeaturesConfig, text);
 		});
-		testTexts.stream().forEach(text -> {
+		testTexts.forEach(text -> {
 			updateFeaturesList(Utils.TEST_INSTACES_FILE, vectorFeaturesConfig, text);
 		});
 	}
 
-	private void updateFeaturesList(String type, String vectorFeaturesConfig, Text text) {
+	protected void updateFeaturesList(String type, String vectorFeaturesConfig, Text text) {
 		Map<String,Double> feats = getFeatures(text, vectorFeaturesConfig);
 		switch(type) {
 			case Utils.TRAIN_INSTANCES_FILE:

@@ -31,29 +31,37 @@ public class ClassificationEvaluation {
 
 	public void writeClassificationEvalToFile(Evaluation evaluation, String pathToInstances, int foldNumber, String kind) {
 		try {
-			Double precisionhs = evaluation.precision(0);
-			Double precisioncl = evaluation.precision(1);
-			Double recallhs = evaluation.recall(0);
-			Double recallcl = evaluation.recall(1);
-			Double kappa = evaluation.kappa();
-			Double fMeasure = evaluation.weightedFMeasure();
-			String confusionMatrix = evaluation.toMatrixString("Confusion matrix: ");
-			List<String> lines = Arrays.asList("Hate speech precision: " + precisionhs,
-					"Non hate speech precision: " + precisioncl, "Hate Speech recall: " + recallhs,
-					"Non hate speech recall: " + recallcl, "Kappa: " + kappa.toString(),
-					"FMeasure: " + fMeasure.toString(), confusionMatrix, "Summary evaluation: " + evaluation.toSummaryString());
+			List<String> lines = getResultLines(evaluation);
 			Path file = Paths.get(pathToInstances+foldNumber+"/"+"Result_"+ kind+ "_" +classifierName+".txt");
 			Files.write(file, lines, Charset.forName("UTF-8"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void writeCrossValidateResultsToFile(String pathToInstances, int foldNumber) {
+
+	public void writeCrossValidateResultsToFile(String pathToInstances, String classifierName) {
 		crossValidationEvals.stream().forEach(eval -> {
-			writeClassificationEvalToFile(eval, pathToInstances, foldNumber, "train");
+			try {
+				List<String> lines = getResultLines(eval);
+				Path file = Paths.get(pathToInstances+"/Result_" + classifierName + ".txt");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		});
-		
+	}
+
+	private List<String> getResultLines(Evaluation evaluation) throws Exception {
+		Double precisionhs = evaluation.precision(0);
+		Double precisioncl = evaluation.precision(1);
+		Double recallhs = evaluation.recall(0);
+		Double recallcl = evaluation.recall(1);
+		Double kappa = evaluation.kappa();
+		Double fMeasure = evaluation.weightedFMeasure();
+		String confusionMatrix = evaluation.toMatrixString("Confusion matrix: ");
+		return Arrays.asList("Hate speech precision: " + precisionhs,
+				"Non hate speech precision: " + precisioncl, "Hate Speech recall: " + recallhs,
+				"Non hate speech recall: " + recallcl, "Kappa: " + kappa.toString(),
+				"FMeasure: " + fMeasure.toString(), confusionMatrix, "Summary evaluation: " + evaluation.toSummaryString());
 	}
 
 	public String getClassifierName() {

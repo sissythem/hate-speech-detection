@@ -115,7 +115,11 @@ public class InstanceGenerator {
 		try {
 			ArffSaver saver = new ArffSaver();
 			saver.setInstances(instances);
-			saver.setFile(new File(startPath + folderNumber + "/" + filename));
+			if(folderNumber == -1) {
+				saver.setFile(new File(startPath + "/" + filename));
+			} else {
+				saver.setFile(new File(startPath + folderNumber + "/" + filename));
+			}
 			saver.writeBatch();
 		} catch (IOException e) {
 			Utils.FILE_LOGGER.error(startingMessageLog + e.getMessage(),e);

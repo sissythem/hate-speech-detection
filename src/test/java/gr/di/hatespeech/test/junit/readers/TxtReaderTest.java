@@ -16,7 +16,7 @@ public class TxtReaderTest {
 	private TxtReader txtReader = new TxtReader();
 
 	@Test
-	public void test() {
+	public void testTxtReader() {
 		try {
 			FileReader fileReader = new FileReader("./src/test/resources/test.txt");
 			BufferedReader bufferedReader = new BufferedReader(fileReader);

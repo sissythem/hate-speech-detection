@@ -28,7 +28,7 @@ public class DataExporterTest {
 	public void testOpenCsvDataExport() {
 		List<Text> texts = new ArrayList<>();
 		Text text = new Text();
-		text.setBody("Hi, how are you? I am fine, thanks");
+		text.setBody("Hi how are you? I am fine thanks");
 		text.setDataset(0);
 		text.setId(1L);
 		text.setLabel("Clean");

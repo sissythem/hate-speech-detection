@@ -26,8 +26,8 @@ public class CharNgramFeatureExtractorTest {
 		text.setPrepMessage("This is a tweet to be tested tested");
 		Map<String,Double> features = characterNGramFeatureExtractor.extractFeatures(text);
 		features.keySet().stream().forEach(key->System.out.println(key + " " + features.get(key)));
-		Double actualValue = features.get("charngramfeatures/es");
-		Double expectedValue = 2.0;
+		Double actualValue = features.get("charngramfeatures/hi_");
+		Double expectedValue = 0.0;
 		assertEquals(expectedValue.toString(), actualValue.toString());
 	}
 

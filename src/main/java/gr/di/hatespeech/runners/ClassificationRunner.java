@@ -37,6 +37,13 @@ public class ClassificationRunner {
 		initClassifiers();
 	}
 
+	public ClassificationRunner(Properties config, String pathToInstances, Instances trainingInstances) {
+		super();
+		this.config = config;
+		this.pathToInstances = pathToInstances;
+		this.trainingInstances = trainingInstances;
+	}
+
 	private void initClassifiers() {
 		String classificationType = config.getProperty(Utils.CLASSIFICATION_TYPE);
 		switch (classificationType) {
@@ -91,7 +98,7 @@ public class ClassificationRunner {
 			Utils.FILE_LOGGER.info(startingMessageLog + "Classifying with Knn Classifier");
 			evaluations.add(knnClassifier.classify(trainingInstances, testInstances));
 		}
-		evaluations.stream().forEach(classificationEvaluation -> {
+		evaluations.forEach(classificationEvaluation -> {
 			classificationEvaluation.writeClassificationEvalToFile(classificationEvaluation.getTrainEval(),
 					pathToInstances, foldNumber, Utils.TRAIN_INSTANCES_FILE);
 			classificationEvaluation.writeClassificationEvalToFile(classificationEvaluation.getTestEval(),
@@ -120,6 +127,9 @@ public class ClassificationRunner {
 			Utils.FILE_LOGGER.info(startingMessageLog + "Classifying with Knn Classifier");
 			evaluations.add(knnClassifier.crossValidate(trainingInstances));
 		}
+		evaluations.forEach(classificationEvaluation -> {
+			classificationEvaluation.writeCrossValidateResultsToFile(pathToInstances, classificationEvaluation.getClassifierName());
+		});
 		return evaluations;
 	}
 
