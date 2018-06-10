@@ -1,7 +1,12 @@
 package gr.di.hatespeech.utils;
 
+import org.apache.log4j.PropertyConfigurator;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Properties;
 
 /**
  * Utils file with constant string and util methods
@@ -20,6 +25,7 @@ public class Utils {
 	/** Properties **/
 	public static final String PARALLEL = "parallel";
 	public static final String NUM_FOLDS = "numFolds";
+	public static final String RUNS = "runs";
 	public static final String START_PATH_TO_INSTANCES = "startPathToInstances";
 	public static final String DATASOURCE = "datasource";
 	public static final String INSTANCES = "instances";
@@ -52,6 +58,7 @@ public class Utils {
 	public static final String WORD = "word";
 	
 	/** Classifiers **/
+	public static final String CLASSIFICATION_TYPE = "classificationType";
 	public static final String KNN_CLASSIFIER = "KNN";
 	public static final String LOGISTIC_REGRESSION_CLASSIFIER = "LogisticRegression";
 	public static final String NAIVE_BAYES_CLASSIFIER = "NaiveBayes";
@@ -94,6 +101,7 @@ public class Utils {
 	public static final String TEST_INSTACES_FILE = "test";
 	public static final String TRAIN_INSTANCES_FILE = "train";
 	public static final String CONFIG_FILE = "./config.properties";
+	public static final String EMAIL_CONFIG_FILE = "./emailConfig.properties";
 	public static final String TWEETS_TO_DOWNLOAD_FILE_PATH = "./datasets/smalldataset.csv";
 	public static final String EXISTING_TWEETS_FILE_PATH = "./datasets/labeled_data.csv";
 	public static final String TWEET_CSV_PATH = "./datasets/tweets.csv";
@@ -119,7 +127,6 @@ public class Utils {
 	public static final String SPELLING_KEY_PREFIX = "spellingfeature/";
 	public static final String SYNTAX_KEY_PREFIX = "syntaxfeature/";
 	public static final String SENTIMENT_KEY_PREFIX = "sentimentfeature/";
-	public static final String NGRAM_GRAPH_KEY_PREFIX = "ngramgraphfeature/";
 	
 	public static LocalDateTime tic() {
 		return LocalDateTime.now();
@@ -129,5 +136,21 @@ public class Utils {
 		LocalDateTime end = LocalDateTime.now();
 		return Duration.between(start, end).toMillis()/1000;
 	}
-	
+
+	/**
+	 * Get configurations
+	 */
+	public  Properties readConfigurationFile(String startingMessageLog, String propertiesName) {
+		InputStream in;
+		Properties config = new Properties();
+		try {
+			in = getClass().getClassLoader().getResourceAsStream(propertiesName);
+			config.load(in);
+			PropertyConfigurator.configure(config);
+		} catch (IOException | NullPointerException e) {
+			Utils.FILE_LOGGER.error(startingMessageLog + e.getMessage(), e);
+		}
+		return config;
+	}
+
 }

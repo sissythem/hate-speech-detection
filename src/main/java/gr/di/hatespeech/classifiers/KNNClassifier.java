@@ -16,9 +16,13 @@ public class KNNClassifier extends BaseClassifier {
 		super(Utils.KNN_CLASSIFIER);
 	}
 
+	public KNNClassifier(int folds, int runs) {
+		super(Utils.KNN_CLASSIFIER, folds, runs);
+	}
+
 	/**
 	 * Knn cross validation
-	 * @param trainingInstances
+	 * @param trainingInstances, instances to cross validate KNN classifier
 	 * @return ClassificationEvaluation result
 	 */
 	@Override
@@ -31,13 +35,7 @@ public class KNNClassifier extends BaseClassifier {
 		try {
 			knn.buildClassifier(trainingInstances);
 			for(int i=1; i<=runs;i++) {
-				Evaluation eval = new Evaluation(trainingInstances);
-				evaluation.addCrossValidationEval(eval);
-				eval.crossValidateModel(knn, trainingInstances, folds, new Random(i));
-				Double kappa = eval.kappa();
-				Double fMeasure = eval.weightedFMeasure();
-				String confusionMatrix = eval.toMatrixString("Confusion matrix: ");
-				Utils.FILE_LOGGER.info(startingMessageLog + "Kappa - " + kappa + ", fMeasure - " + fMeasure + ", confusionMatrix - " + confusionMatrix);
+				evaluateCrossValidation(trainingInstances, i, knn);
 			}
 		} catch (Exception e) {
 			Utils.FILE_LOGGER.error(e.getMessage(),e);
@@ -48,8 +46,8 @@ public class KNNClassifier extends BaseClassifier {
 	/**
 	 * Knn classification. Gets two Instances objects as input, one for training
 	 * and one for evaluation
-	 * @param trainingInstances
-	 * @param testInstances
+	 * @param trainingInstances, instances to train KNN classifier
+	 * @param testInstances, instances to test KNN classifier
 	 * @return ClassificationEvaluation result
 	 */
 	@Override
@@ -57,29 +55,7 @@ public class KNNClassifier extends BaseClassifier {
 		initEvaluation(Utils.KNN_CLASSIFIER);
 		int k = 9;
 		this.knn = new IBk(k);
-		try {
-			Utils.FILE_LOGGER.info(startingMessageLog + "Building classifier");
-			trainingInstances.randomize(new Random());
-			testInstances.randomize(new Random());
-			knn.buildClassifier(trainingInstances);
-			Evaluation trainEval = new Evaluation(trainingInstances);
-			evaluation.setTrainEval(trainEval);
-			evaluation.setTrainingPredictions(trainEval.evaluateModel(knn, trainingInstances));
-			for(int instanceIndex =0; instanceIndex < testInstances.numInstances(); instanceIndex++) {
-				knn.classifyInstance(testInstances.get(instanceIndex));
-			}
-			Utils.FILE_LOGGER.info(startingMessageLog + "Testing classifier");
-			Evaluation testEval = new Evaluation(trainingInstances);
-			evaluation.setTestPredictions(testEval.evaluateModel(knn, testInstances));
-			evaluation.setTestEval(testEval);
-			Double kappa = testEval.kappa();
-			Double fMeasure = testEval.weightedFMeasure();
-			String confusionMatrix = testEval.toMatrixString("Confusion matrix: ");
-			Utils.FILE_LOGGER.info(startingMessageLog + "Kappa - " + kappa + ", fMeasure - " + fMeasure + ", confusionMatrix - " + confusionMatrix);
-			Utils.FILE_LOGGER.info(startingMessageLog + "Summary: " + testEval.toSummaryString());
-		} catch (Exception e) {
-			Utils.FILE_LOGGER.error(e.getMessage(),e);
-		}
+		evaluateClassification(trainingInstances, testInstances, knn);
 		return evaluation;
 	}
 

@@ -17,21 +17,22 @@ public class EmailSender {
 	/**
      * Send email using GMail SMTP server.
      *
-     * @param username GMail username
-     * @param password GMail password
-     * @param recipientEmail TO recipient
-     * @param title title of the message
-     * @param message message to be sent
+     * @param emailConfig, email configurations
      * @throws AddressException if the email address parse failed
      * @throws MessagingException if the connection is dead or not in the connected state or if the message is not a MimeMessage
      */
-    public static void Send(final String username, final String password, String recipientEmail, String title, String message) throws AddressException, MessagingException {
-    	EmailSender.Send(username, password, recipientEmail, "", title, message);
+    public static void Send(Properties emailConfig) throws AddressException, MessagingException {
+        final String username = emailConfig.getProperty("username");
+        final String password = emailConfig.getProperty("password");
+        final String recipientEmail = emailConfig.getProperty("recipient");
+        final String title = emailConfig.getProperty("title");
+        final String message = emailConfig.getProperty("message");
+        final String cc = emailConfig.getProperty("cc");
+    	EmailSender.Send(username, password, recipientEmail, cc, title, message);
     }
 
     /**
      * Send email using GMail SMTP server.
-     *
      * @param username GMail username
      * @param password GMail password
      * @param recipientEmail TO recipient

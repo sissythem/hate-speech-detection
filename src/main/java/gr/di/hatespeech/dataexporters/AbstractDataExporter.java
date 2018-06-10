@@ -22,7 +22,8 @@ import gr.di.hatespeech.utils.Utils;
 
 public abstract class AbstractDataExporter<T> implements DataExporter<T> {
 	private static String startingMessageLog = "[" + AbstractDataExporter.class.getSimpleName() + "] ";
-	protected Properties config = new Properties();
+
+	protected Properties config;
 	protected EntityManagerFactory factory;
 
 	/** Feature extractors **/
@@ -34,20 +35,9 @@ public abstract class AbstractDataExporter<T> implements DataExporter<T> {
 	protected SyntaxFeatureExtractor syntaxFeatureExtractor;
 	
 	public AbstractDataExporter() {
-		readConfigurationFile();
+		Utils utils = new Utils();
+		config = utils.readConfigurationFile(startingMessageLog, Utils.CONFIG_FILE);
 		initFeatureExtractors();
-	}
-
-	protected void readConfigurationFile() {
-		InputStream in;
-		try {
-			String propertiesName = Utils.CONFIG_FILE;
-			in = getClass().getClassLoader().getResourceAsStream(propertiesName);
-			config.load(in);
-			PropertyConfigurator.configure(config);
-		} catch (IOException | NullPointerException e) {
-			Utils.FILE_LOGGER.error(startingMessageLog + e.getMessage(), e);
-		}
 	}
 	
 	protected void initFeatureExtractors() {
@@ -94,14 +84,6 @@ public abstract class AbstractDataExporter<T> implements DataExporter<T> {
 	public void exportDataToDatabase(List<T> data) {
 		
 	}
-	
-	public Properties getConfig() {
-		return config;
-	}
-
-	public void setConfig(Properties config) {
-		this.config = config;
-	}
 
 	public EntityManagerFactory getFactory() {
 		return factory;
@@ -109,54 +91,6 @@ public abstract class AbstractDataExporter<T> implements DataExporter<T> {
 
 	public void setFactory(EntityManagerFactory factory) {
 		this.factory = factory;
-	}
-
-	public BOWFeaturesExtractor getBowExtractor() {
-		return bowExtractor;
-	}
-
-	public void setBowExtractor(BOWFeaturesExtractor bowExtractor) {
-		this.bowExtractor = bowExtractor;
-	}
-
-	public Word2VecFeatureExtractor getWord2vecExtractor() {
-		return word2vecExtractor;
-	}
-
-	public void setWord2vecExtractor(Word2VecFeatureExtractor word2vecExtractor) {
-		this.word2vecExtractor = word2vecExtractor;
-	}
-
-	public NgramFeatureExtractor getNgramFeatureExtractor() {
-		return ngramFeatureExtractor;
-	}
-
-	public void setNgramFeatureExtractor(NgramFeatureExtractor ngramFeatureExtractor) {
-		this.ngramFeatureExtractor = ngramFeatureExtractor;
-	}
-
-	public CharacterNGramFeatureExtractor getCharngramFeatureExtractor() {
-		return charngramFeatureExtractor;
-	}
-
-	public void setCharngramFeatureExtractor(CharacterNGramFeatureExtractor charngramFeatureExtractor) {
-		this.charngramFeatureExtractor = charngramFeatureExtractor;
-	}
-
-	public SpellingFeatureExtractor getSpellingFeatureExtractor() {
-		return spellingFeatureExtractor;
-	}
-
-	public void setSpellingFeatureExtractor(SpellingFeatureExtractor spellingFeatureExtractor) {
-		this.spellingFeatureExtractor = spellingFeatureExtractor;
-	}
-
-	public SyntaxFeatureExtractor getSyntaxFeatureExtractor() {
-		return syntaxFeatureExtractor;
-	}
-
-	public void setSyntaxFeatureExtractor(SyntaxFeatureExtractor syntaxFeatureExtractor) {
-		this.syntaxFeatureExtractor = syntaxFeatureExtractor;
 	}
 
 }

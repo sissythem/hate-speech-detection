@@ -21,8 +21,13 @@ public class NaiveBayesClassifier extends BaseClassifier {
 	/**
 	 * Default constructor. Initialization of weka NaiveBayes classifier
 	 */
-	public NaiveBayesClassifier() {
+	public NaiveBayesClassifier()
+	{
 		super(Utils.NAIVE_BAYES_CLASSIFIER);
+	}
+
+	public NaiveBayesClassifier(int folds, int runs) {
+		super(Utils.NAIVE_BAYES_CLASSIFIER, folds, runs);
 	}
 
 	/**
@@ -41,13 +46,7 @@ public class NaiveBayesClassifier extends BaseClassifier {
 			naiveBayes.buildClassifier(trainingInstances);
 			Utils.FILE_LOGGER.info(startingMessageLog + "Training NaiveBayes classifier");
 			for (int i = 1; i <= runs; i++) {
-				Evaluation eval = new Evaluation(trainingInstances);
-				evaluation.addCrossValidationEval(eval);
-				eval.crossValidateModel(naiveBayes, trainingInstances, folds, new Random(i));
-				Double kappa = eval.kappa();
-				Double fMeasure = eval.weightedFMeasure();
-				String confusionMatrix = eval.toMatrixString("Confusion matrix: ");
-				Utils.FILE_LOGGER.info(startingMessageLog + "Kappa - " + kappa + ", fMeasure - " + fMeasure + ", confusionMatrix - " + confusionMatrix);
+				evaluateCrossValidation(trainingInstances, i, naiveBayes);
 			}
 		} catch (Exception e) {
 			Utils.FILE_LOGGER.error(e.getMessage(),e);
@@ -68,28 +67,7 @@ public class NaiveBayesClassifier extends BaseClassifier {
 		initEvaluation(Utils.NAIVE_BAYES_CLASSIFIER);
 		trainingInstances.randomize(new Random());
 		testInstances.randomize(new Random());
-		try {
-			Utils.FILE_LOGGER.info(startingMessageLog + "Building classifier");
-			naiveBayes.buildClassifier(trainingInstances);
-			Evaluation trainEval = new Evaluation(trainingInstances);
-			evaluation.setTrainEval(trainEval);
-			evaluation.setTrainingPredictions(trainEval.evaluateModel(naiveBayes, trainingInstances));
-			for(int instanceIndex =0; instanceIndex < testInstances.numInstances(); instanceIndex++) {
-				naiveBayes.classifyInstance(testInstances.get(instanceIndex));
-			}
-			Utils.FILE_LOGGER.info(startingMessageLog + "Testing classifier");
-			Evaluation testEval = new Evaluation(trainingInstances);
-			evaluation.setTestPredictions(testEval.evaluateModel(naiveBayes, testInstances));
-			evaluation.setTestEval(testEval);
-			Double kappa = testEval.kappa();
-			Double fMeasure = testEval.weightedFMeasure();
-			String confusionMatrix = testEval.toMatrixString("Confusion matrix: ");
-			Utils.FILE_LOGGER.info(startingMessageLog + "Kappa - " + kappa + ", fMeasure - " + fMeasure + ", confusionMatrix - " + confusionMatrix);
-			Utils.FILE_LOGGER.info(startingMessageLog + "Summary: " + testEval.toSummaryString());
-		} catch (Exception e) {
-			e.printStackTrace();
-			Utils.FILE_LOGGER.error(e.getMessage(),e);
-		}
+		evaluateClassification(trainingInstances, testInstances, naiveBayes);
 		return evaluation;
 	}
 

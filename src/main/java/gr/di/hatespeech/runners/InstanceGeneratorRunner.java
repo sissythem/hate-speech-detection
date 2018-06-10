@@ -15,33 +15,41 @@ import gr.di.hatespeech.entities.Text;
 import gr.di.hatespeech.entities.TextFeature;
 import gr.di.hatespeech.features.InstanceGenerator;
 import gr.di.hatespeech.features.NgramGraphFeatureExtractor;
-import gr.di.hatespeech.features.NgramGraphMultiLabelFeatureExtractor;
 import gr.di.hatespeech.utils.Utils;
 import weka.core.Instances;
 
 public class InstanceGeneratorRunner {
 	private static String startingMessageLog = "[" + InstanceGeneratorRunner.class.getSimpleName() + "] ";
-	private int foldNumber;
-	private int dataset;
-	private Properties config;
-	private List<Feature> existingFeatures;
-	private List<TextFeature> existingTextFeatures;
-	private Map<Integer,List<Text>> totalFolds;
-	private String pathToInstances;
+
+	protected int foldNumber;
+	protected int dataset;
+	protected Properties config;
+	protected List<Feature> existingFeatures;
+	protected List<TextFeature> existingTextFeatures;
+	protected Map<Integer,List<Text>> totalFolds;
+	protected String pathToInstances;
 	
-	private NgramGraphFeatureExtractor ngramGraphFeatureExtractor;
-	private NgramGraphMultiLabelFeatureExtractor ngramGraphMultiLabelFeatureExtractor;
-	
+	protected NgramGraphFeatureExtractor ngramGraphFeatureExtractor;
+
 	/** Training and test features & labels to create Instances **/
-	private List<Map<String, Double>> trainingFeatures;
-	private List<String> trainingLabels;
-	private List<Map<String, Double>> testingFeatures;
-	private List<String> testLabels;
+	protected List<Map<String, Double>> trainingFeatures;
+	protected List<String> trainingLabels;
+	protected List<Map<String, Double>> testingFeatures;
+	protected List<String> testLabels;
 	
 	/** Instances **/
-	private Instances trainingInstances;
-	private Instances testInstances;
-	
+	protected Instances trainingInstances;
+	protected Instances testInstances;
+
+	/**
+	 * InstanceGeneratorRunner constructor
+	 * @param foldNumber
+	 * @param config
+	 * @param existingFeatures
+	 * @param existingTextFeatures
+	 * @param totalFolds
+	 * @param pathToInstances
+	 */
 	public InstanceGeneratorRunner(int foldNumber, Properties config, List<Feature> existingFeatures,
 			List<TextFeature> existingTextFeatures, Map<Integer,List<Text>> totalFolds, String pathToInstances) {
 		super();
@@ -54,6 +62,9 @@ public class InstanceGeneratorRunner {
 		this.pathToInstances = pathToInstances;
 	}
 
+	/**
+	 * Create new instances
+	 */
 	public void runGenerateNewInstances() {
 		// get training and test texts
 		Utils.FILE_LOGGER.info(startingMessageLog + "Generating new instances");
@@ -114,40 +125,42 @@ public class InstanceGeneratorRunner {
 		String vectorFeaturesConfig = config.getProperty(Utils.VECTOR_FEATURES);
 		Utils.FILE_LOGGER.info(startingMessageLog + "Vector instances to create: " + vectorFeaturesConfig);
 		trainingTexts.stream().forEach(text -> {
-			Map<String,Double> feats = getFeatures(ngramGraphFeatureExtractor, text, vectorFeaturesConfig, dataset);
-			trainingFeatures.add(feats);
-			if(dataset == -1) {
-				trainingLabels.add(text.getLabel());
-			} else {
-				trainingLabels.add(text.getOldLabel());
-			}
+			updateFeaturesList(Utils.TRAIN_INSTANCES_FILE, vectorFeaturesConfig, text);
 		});
 		testTexts.stream().forEach(text -> {
-			Map<String,Double> feats = getFeatures(ngramGraphFeatureExtractor, text, vectorFeaturesConfig, dataset);
-			testingFeatures.add(feats);
-			if(dataset == -1) {
-				testLabels.add(text.getLabel());
-			} else {
-				testLabels.add(text.getOldLabel());
-			}
+			updateFeaturesList(Utils.TEST_INSTACES_FILE, vectorFeaturesConfig, text);
 		});
+	}
+
+	private void updateFeaturesList(String type, String vectorFeaturesConfig, Text text) {
+		Map<String,Double> feats = getFeatures(text, vectorFeaturesConfig);
+		switch(type) {
+			case Utils.TRAIN_INSTANCES_FILE:
+				trainingFeatures.add(feats);
+				if(dataset == -1) {
+					trainingLabels.add(text.getLabel());
+				} else {
+					trainingLabels.add(text.getOldLabel());
+				}
+				break;
+			case Utils.TEST_INSTACES_FILE:
+				testingFeatures.add(feats);
+				if (dataset == -1) {
+					testLabels.add(text.getLabel());
+				} else {
+					testLabels.add(text.getOldLabel());
+				}
+				break;
+		}
 	}
 	
 	protected void initGraphFeatureExtractor(List<Text> trainingTexts, int dataset) {
 		if (Boolean.parseBoolean(config.getProperty(Utils.GRAPH_FEATURES))) {
 			List<Text> trainingForClassGraph = getTrainingDataForGraph(trainingTexts);
-			if(dataset == -1) {
-				ngramGraphFeatureExtractor = new NgramGraphFeatureExtractor(trainingForClassGraph, config.getProperty(Utils.GRAPH_TYPE));
-			} else {
-				ngramGraphMultiLabelFeatureExtractor = new NgramGraphMultiLabelFeatureExtractor(trainingForClassGraph, config.getProperty(Utils.GRAPH_TYPE), dataset);
-			}
+				ngramGraphFeatureExtractor = new NgramGraphFeatureExtractor(trainingForClassGraph, config.getProperty(Utils.GRAPH_TYPE), dataset);
 		}
 		else {
-			if (dataset == -1) {
-				ngramGraphFeatureExtractor = new NgramGraphFeatureExtractor();	
-			} else {
-				ngramGraphMultiLabelFeatureExtractor = new NgramGraphMultiLabelFeatureExtractor();
-			}
+				ngramGraphFeatureExtractor = new NgramGraphFeatureExtractor();
 		}
 	}
 
@@ -168,11 +181,10 @@ public class InstanceGeneratorRunner {
 
 	/**
 	 * Generate all features (vector and graph) for training texts
-	 * @param ngramGraphFeatureExtractor
 	 * @param text
+	 * @param featuresConfig
 	 */
-	protected Map<String, Double> getFeatures(NgramGraphFeatureExtractor ngramGraphFeatureExtractor, Text text,
-			String featuresConfig, int dataset) {
+	protected Map<String, Double> getFeatures(Text text, String featuresConfig) {
 		Map<String, Double> textFeatures = new HashMap<>();
 		// get vector features
 		switch (featuresConfig) {
@@ -188,11 +200,7 @@ public class InstanceGeneratorRunner {
 		}
 		if (Boolean.parseBoolean(config.getProperty(Utils.GRAPH_FEATURES))) {
 			// get graph features
-			if (dataset == -1) {
-				textFeatures.putAll(ngramGraphFeatureExtractor.extractFeatures(text));
-			} else {
-				textFeatures.putAll(ngramGraphMultiLabelFeatureExtractor.extractFeatures(text));
-			}
+			textFeatures.putAll(ngramGraphFeatureExtractor.extractFeatures(text));
 		}
 		return textFeatures;
 	}
@@ -227,9 +235,7 @@ public class InstanceGeneratorRunner {
 	
 	protected Map<String,Double> initVectorMap() {
 		Map<String,Double> vectorFeatures = new HashMap<>();
-		existingFeatures.stream().forEach(feature -> {
-			vectorFeatures.put(feature.getDescription(), 0.0);
-		});
+		existingFeatures.stream().forEach(feature -> vectorFeatures.put(feature.getDescription(), 0.0));
 		return vectorFeatures;
 	}
 

@@ -48,3 +48,4 @@ src/main/resources/bow/
 src/main/resources/preprocessing/
 src/main/resources/spelling/
 src/main/resources/ngrams/
+src/main/resources/emailConfig.properties

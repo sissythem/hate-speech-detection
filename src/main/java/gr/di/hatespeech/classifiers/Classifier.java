@@ -12,5 +12,4 @@ import weka.core.Instances;
 public interface Classifier {
 	ClassificationEvaluation crossValidate(Instances trainingInstances);
 	ClassificationEvaluation classify(Instances trainingInstances, Instances testInstances);
-	void writeResultToFile();
 }

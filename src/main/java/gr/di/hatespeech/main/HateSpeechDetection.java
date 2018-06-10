@@ -32,7 +32,9 @@ import gr.di.hatespeech.utils.Utils;
  */
 public class HateSpeechDetection {
 	private static String startingMessageLog = "[" + HateSpeechDetection.class.getSimpleName() + "] ";
-	protected Properties config = new Properties();
+
+	protected Properties config;
+	protected Properties emailConfig;
 	protected Map<Integer, List<Text>> totalFolds = new HashMap<>();
 	protected List<Feature> existingFeatures = new ArrayList<>();
 	protected List<TextFeature> existingTextFeatures = new ArrayList<>();
@@ -43,8 +45,9 @@ public class HateSpeechDetection {
 			HateSpeechDetection hsd = new HateSpeechDetection();
 			
 			// read config.properties
-			hsd.readConfigurationFile();
-			
+			Utils utils = new Utils();
+			hsd.config = utils.readConfigurationFile(startingMessageLog, Utils.CONFIG_FILE);
+			hsd.emailConfig = utils.readConfigurationFile(startingMessageLog, Utils.EMAIL_CONFIG_FILE);
 			// retrieve data from datasource based on config.properties
 			if (hsd.config.getProperty(Utils.INSTANCES).equals("new")
 					&& hsd.config.getProperty(Utils.VECTOR_FEATURES).equals("existing")) {
@@ -54,24 +57,9 @@ public class HateSpeechDetection {
 			hsd.runFolds();
 			Utils.FILE_LOGGER.info(startingMessageLog + "PROGRAM FINISH");
 			Utils.FILE_LOGGER.info(startingMessageLog + "==================");
-			EmailSender.Send("c.themeli", "Cardu2214!", "c.themeli@gmail.com", "Program finished", "Program finished");
+			EmailSender.Send(hsd.emailConfig);
 		} catch (Exception e) {
 			e.printStackTrace();
-			Utils.FILE_LOGGER.error(startingMessageLog + e.getMessage(), e);
-		}
-	}
-	
-	/**
-	 * Get configurations
-	 */
-	protected void readConfigurationFile() {
-		InputStream in;
-		try {
-			String propertiesName = Utils.CONFIG_FILE;
-			in = getClass().getClassLoader().getResourceAsStream(propertiesName);
-			config.load(in);
-			PropertyConfigurator.configure(config);
-		} catch (IOException | NullPointerException e) {
 			Utils.FILE_LOGGER.error(startingMessageLog + e.getMessage(), e);
 		}
 	}

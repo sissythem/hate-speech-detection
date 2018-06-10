@@ -21,8 +21,13 @@ public class LogisticRegressionClassifier extends BaseClassifier {
 	/**
 	 * Default constructor
 	 */
-	public LogisticRegressionClassifier() {
+	public LogisticRegressionClassifier()
+	{
 		super(Utils.LOGISTIC_REGRESSION_CLASSIFIER);
+	}
+
+	public LogisticRegressionClassifier(int folds, int runs) {
+		super(Utils.LOGISTIC_REGRESSION_CLASSIFIER, folds, runs);
 	}
 	
 	/**
@@ -41,13 +46,7 @@ public class LogisticRegressionClassifier extends BaseClassifier {
 			lrClassifier.buildClassifier(trainingInstances);
 			Utils.FILE_LOGGER.info(startingMessageLog + "Training LogisticRegression classifier");
 			for(int i=1; i<=runs;i++) {
-				Evaluation eval = new Evaluation(trainingInstances);
-				evaluation.addCrossValidationEval(eval);
-				eval.crossValidateModel(lrClassifier, trainingInstances, folds, new Random(i));
-				Double kappa = eval.kappa();
-				Double fMeasure = eval.weightedFMeasure();
-				String confusionMatrix = eval.toMatrixString("Confusion matrix: ");
-				Utils.FILE_LOGGER.info(startingMessageLog + "Kappa - " + kappa + ", fMeasure - " + fMeasure + ", confusionMatrix - " + confusionMatrix);
+				evaluateCrossValidation(trainingInstances, i, lrClassifier);
 			}
 		} catch(Exception e) {
 			Utils.FILE_LOGGER.error(e.getMessage(),e);
@@ -68,28 +67,7 @@ public class LogisticRegressionClassifier extends BaseClassifier {
 		initEvaluation(Utils.LOGISTIC_REGRESSION_CLASSIFIER);
 		trainingInstances.randomize(new Random());
 		testInstances.randomize(new Random());
-		try {
-			Utils.FILE_LOGGER.info(startingMessageLog + "Building classifier");
-			lrClassifier.buildClassifier(trainingInstances);
-			Evaluation trainEval = new Evaluation(trainingInstances);
-			evaluation.setTrainEval(trainEval);
-			evaluation.setTrainingPredictions(trainEval.evaluateModel(lrClassifier, trainingInstances));
-			for(int instanceIndex =0; instanceIndex < testInstances.numInstances(); instanceIndex++) {
-				lrClassifier.classifyInstance(testInstances.get(instanceIndex));
-			}
-			Utils.FILE_LOGGER.info(startingMessageLog + "Testing classifier");
-			Evaluation testEval = new Evaluation(trainingInstances);
-			evaluation.setTestPredictions(testEval.evaluateModel(lrClassifier, testInstances));
-			evaluation.setTestEval(testEval);
-			Double kappa = testEval.kappa();
-			Double fMeasure = testEval.weightedFMeasure();
-			String confusionMatrix = testEval.toMatrixString("Confusion matrix: ");
-			Utils.FILE_LOGGER.info(startingMessageLog + "Kappa - " + kappa + ", fMeasure - " + fMeasure + ", confusionMatrix - " + confusionMatrix);
-			Utils.FILE_LOGGER.info(startingMessageLog + "Summary: " + testEval.toSummaryString());
-		} catch (Exception e) {
-			Utils.FILE_LOGGER.error(e.getMessage(),e);
-			e.printStackTrace();
-		}
+		evaluateClassification(trainingInstances, testInstances, lrClassifier);
 		return evaluation;
 	}
 

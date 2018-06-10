@@ -22,9 +22,9 @@ public class ClassificationRunner {
 	private Instances testInstances;
 
 	private Map<Integer, List<ClassificationEvaluation>> totalEvaluations = new HashMap<>();
-	private NaiveBayesClassifier naiveBayes = new NaiveBayesClassifier();
-	private LogisticRegressionClassifier logisticRegressionClassifier = new LogisticRegressionClassifier();
-	private KNNClassifier knnClassifier = new KNNClassifier();
+	private NaiveBayesClassifier naiveBayes;
+	private LogisticRegressionClassifier logisticRegressionClassifier;
+	private KNNClassifier knnClassifier;
 
 	public ClassificationRunner(int foldNumber, Properties config, String pathToInstances, Instances trainingInstances,
 			Instances testInstances) {
@@ -34,12 +34,39 @@ public class ClassificationRunner {
 		this.pathToInstances = pathToInstances;
 		this.trainingInstances = trainingInstances;
 		this.testInstances = testInstances;
+		initClassifiers();
+	}
+
+	private void initClassifiers() {
+		String classificationType = config.getProperty(Utils.CLASSIFICATION_TYPE);
+		switch (classificationType) {
+			case "classification":
+				naiveBayes = new NaiveBayesClassifier();
+				logisticRegressionClassifier = new LogisticRegressionClassifier();
+				knnClassifier = new KNNClassifier();
+				break;
+			case "crossValidation":
+				int numFolds = Integer.parseInt(config.getProperty(Utils.NUM_FOLDS));
+				int runs = Integer.parseInt(config.getProperty(Utils.RUNS));
+				naiveBayes = new NaiveBayesClassifier(numFolds, runs);
+				logisticRegressionClassifier = new LogisticRegressionClassifier(numFolds, runs);
+				knnClassifier = new KNNClassifier(numFolds, runs);
+				break;
+		}
 	}
 
 	public void runClassification() {
 		// classify
-		List<ClassificationEvaluation> evaluations = classify(trainingInstances, testInstances);
-		totalEvaluations.put(foldNumber, evaluations);
+		switch(config.getProperty(Utils.CLASSIFICATION_TYPE)) {
+			case "classification":
+				List<ClassificationEvaluation> evaluations = classify(trainingInstances, testInstances);
+				totalEvaluations.put(foldNumber, evaluations);
+				break;
+			case "crossValidation":
+				List<ClassificationEvaluation> evals = crossValidate(trainingInstances);
+				totalEvaluations.put(foldNumber, evals);
+				break;
+		}
 
 	}
 
@@ -47,8 +74,8 @@ public class ClassificationRunner {
 	 * Train classifiers with trainingInstances and evaluate them with the
 	 * testInstances
 	 * 
-	 * @param trainingInstances
-	 * @param testInstances
+	 * @param trainingInstances, instances to train the classifier
+	 * @param testInstances, instances to test the classifier
 	 * @return list of ClassificationEvaluation
 	 */
 	protected List<ClassificationEvaluation> classify(Instances trainingInstances, Instances testInstances) {
@@ -71,6 +98,29 @@ public class ClassificationRunner {
 			classificationEvaluation.writeClassificationEvalToFile(classificationEvaluation.getTestEval(),
 					pathToInstances, foldNumber, Utils.TEST_INSTACES_FILE);
 		});
+		return evaluations;
+	}
+
+	/**
+	 * Method to execute cross validation with the 3 classifiers
+	 * @param trainingInstances, instances to cross validate each classifier
+	 * @return
+	 */
+	protected List<ClassificationEvaluation> crossValidate(Instances trainingInstances) {
+		List<ClassificationEvaluation> evaluations = new ArrayList<>();
+
+		if (Boolean.parseBoolean(config.getProperty(Utils.NAIVE_BAYES_CLASSIFIER))) {
+			Utils.FILE_LOGGER.info(startingMessageLog + "Cross validation with Naive Bayes");
+			evaluations.add(naiveBayes.crossValidate(trainingInstances));
+		}
+		if (Boolean.parseBoolean(config.getProperty(Utils.LOGISTIC_REGRESSION_CLASSIFIER))) {
+			Utils.FILE_LOGGER.info(startingMessageLog + "Cross validation with Logistic Regression");
+			evaluations.add(logisticRegressionClassifier.crossValidate(trainingInstances));
+		}
+		if (Boolean.parseBoolean(config.getProperty(Utils.KNN_CLASSIFIER))) {
+			Utils.FILE_LOGGER.info(startingMessageLog + "Classifying with Knn Classifier");
+			evaluations.add(knnClassifier.crossValidate(trainingInstances));
+		}
 		return evaluations;
 	}
 
