@@ -23,6 +23,7 @@ import gr.di.hatespeech.repositories.FeatureRepository;
 import gr.di.hatespeech.repositories.TextFeatureRepository;
 import gr.di.hatespeech.runners.FoldRunner;
 import gr.di.hatespeech.splitters.NfoldDatasetSplitter;
+import gr.di.hatespeech.utils.EmailSender;
 import gr.di.hatespeech.utils.Utils;
 
 /**
@@ -53,6 +54,7 @@ public class HateSpeechDetection {
 			hsd.runFolds();
 			Utils.FILE_LOGGER.info(startingMessageLog + "PROGRAM FINISH");
 			Utils.FILE_LOGGER.info(startingMessageLog + "==================");
+			EmailSender.Send("c.themeli", "Cardu2214!", "c.themeli@gmail.com", "Program finished", "Program finished");
 		} catch (Exception e) {
 			e.printStackTrace();
 			Utils.FILE_LOGGER.error(startingMessageLog + e.getMessage(), e);
