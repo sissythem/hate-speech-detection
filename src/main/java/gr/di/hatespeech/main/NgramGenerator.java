@@ -68,7 +68,7 @@ public class NgramGenerator {
 		allTokens = ngramFeatureExtractor.getAllTokens();
 		allTokens.putAll(characterNGramFeatureExtractor.getAllTokens());
 		texts.stream()
-				.filter(text -> !StringUtils.isBlank(text.getPrepMessage()) && text.getId() > 500 && text.getId()<701).forEach(text -> {
+				.filter(text -> !StringUtils.isBlank(text.getPrepMessage()) && text.getId() > 1000 && text.getId()<2001).forEach(text -> {
 					Utils.FILE_LOGGER.info("Text: " + text.getPrepMessage());
 					Map<String, Double> features = ngramFeatureExtractor.extractFeatures(text);
 					features.putAll(characterNGramFeatureExtractor.extractFeatures(text));
