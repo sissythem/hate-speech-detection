@@ -44,6 +44,7 @@ public class ClassificationEvaluation {
 			try {
 				List<String> lines = getResultLines(eval);
 				Path file = Paths.get(pathToInstances+"/Result_" + classifierName + ".txt");
+				Files.write(file, lines, Charset.forName("UTF-8"));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

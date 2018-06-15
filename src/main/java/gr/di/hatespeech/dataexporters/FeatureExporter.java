@@ -10,6 +10,9 @@ import javax.persistence.Persistence;
 
 import gr.di.hatespeech.entities.Feature;
 import gr.di.hatespeech.entities.Text;
+import gr.di.hatespeech.entities.TextFeature;
+import gr.di.hatespeech.repositories.FeatureRepository;
+import gr.di.hatespeech.repositories.TextFeatureRepository;
 import gr.di.hatespeech.repositories.TextRepository;
 import gr.di.hatespeech.utils.Utils;
 
@@ -36,19 +39,21 @@ public class FeatureExporter extends AbstractDataExporter<Feature> {
 		Set<String> features = f.keySet();
 		factory = Persistence.createEntityManagerFactory(Utils.PERSISTENCE_UNIT_NAME);
 		EntityManager em = factory.createEntityManager();
-		features.forEach(feature -> {
-			Feature feat = new Feature();
-			feat.setDescription(feature);
-			addKind(feat);
-			em.getTransaction().begin();
-			em.persist(feat);
-			em.getTransaction().commit();
-		});
+		features.forEach(feature -> exportFeatureToDatabase(em, feature));
 		em.close();
 		factory.close();
 	}
-	
-	private void addKind(Feature feature) {
+
+	public void exportFeatureToDatabase(EntityManager em, String feature) {
+		Feature feat = new Feature();
+		feat.setDescription(feature);
+		addKind(feat);
+		em.getTransaction().begin();
+		em.persist(feat);
+		em.getTransaction().commit();
+	}
+
+	public void addKind(Feature feature) {
 		if(feature.getDescription().contains(Utils.BOW_KEY_PREFIX)) {
 			feature.setKind("bow");
 		} else if(feature.getDescription().contains(Utils.CHAR_NGRAM_KEY_PREFIX)) {
@@ -66,5 +71,30 @@ public class FeatureExporter extends AbstractDataExporter<Feature> {
 		}
 		
 	}
-	
+
+	public void deleteNgramsFromDatabase() {
+		FeatureRepository featureRepo = new FeatureRepository();
+		TextFeatureRepository textFeatureRepository = new TextFeatureRepository();
+		List<Feature> feats = featureRepo.findFeatureByKind("ngram");
+		feats.addAll(featureRepo.findFeatureByKind("charngram"));
+		factory = Persistence.createEntityManagerFactory(Utils.PERSISTENCE_UNIT_NAME);
+		EntityManager em = factory.createEntityManager();
+		feats.forEach(feature -> {
+			List<TextFeature> tfs = textFeatureRepository.findTextFeatureByFeature(feature.getId());
+			tfs.forEach(tf -> {
+				Utils.FILE_LOGGER.info("Deleting text feature: " + tf.getId());
+				em.getTransaction().begin();
+				tf = em.merge(tf);
+				em.remove(tf);
+				em.getTransaction().commit();
+			});
+			Utils.FILE_LOGGER.info("Deleting feature" + feature.getDescription());
+			em.getTransaction().begin();
+			feature = em.merge(feature);
+			em.remove(feature);
+			em.getTransaction().commit();
+		});
+		em.close();
+		factory.close();
+	}
 }

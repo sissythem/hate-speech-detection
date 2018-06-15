@@ -18,6 +18,7 @@ import weka.core.tokenizers.Tokenizer;
  */
 public abstract class BaseVectorFeatureExtractor implements FeatureExtractor<Map<String, Double>> {
 	protected Map<String, Double> features;
+	protected Map<String,Double> allTokens = new HashMap<>();
 	protected String prefix;
 	
 	/**
@@ -73,5 +74,12 @@ public abstract class BaseVectorFeatureExtractor implements FeatureExtractor<Map
 	public void setFeatures(Map<String, Double> features) {
 		this.features = features;
 	}
+	
+	public Map<String, Double> getAllTokens() {
+		return allTokens;
+	}
 
+	public void setAllTokens(Map<String, Double> allTokens) {
+		this.allTokens = allTokens;
+	}
 }

@@ -3,12 +3,9 @@ package gr.di.hatespeech.features;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
 
 import gr.di.hatespeech.entities.Text;
 import gr.di.hatespeech.utils.Utils;
@@ -20,8 +17,6 @@ import weka.core.tokenizers.CharacterNGramTokenizer;
  */
 public class CharacterNGramFeatureExtractor extends BaseVectorFeatureExtractor {
 	private static String startingMessageLog = "[" + CharacterNGramFeatureExtractor.class.getSimpleName() + "] ";
-
-	protected Map<String,Double> allTokens = new HashMap<>();
 
 	public CharacterNGramFeatureExtractor(String prefix) {
 		super(prefix);
@@ -40,7 +35,7 @@ public class CharacterNGramFeatureExtractor extends BaseVectorFeatureExtractor {
 	 */
 	@Override
 	public Map<String, Double> extractFeatures(Text text) {
-		Utils.FILE_LOGGER.info(startingMessageLog + "Extracting char ngrams for text" + text.getId());
+		Utils.FILE_LOGGER.info(startingMessageLog + "Extracting char ngrams for text " + text.getId());
 		List<String> elements = getCharacterNgramTokens(text);
 		features = allTokens;
 		elements.forEach(element -> {
@@ -81,4 +76,5 @@ public class CharacterNGramFeatureExtractor extends BaseVectorFeatureExtractor {
 			e.printStackTrace();
 		}
 	}
+
 }

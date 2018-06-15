@@ -85,6 +85,7 @@ public class HateSpeechDetection {
 	 * Initialize Features and TextFeatures from database
 	 */
 	private void retrieveFeaturesFromDatabase() {
+		Utils.FILE_LOGGER.info("Retrieving features and text features from database");
 		FeatureRepository featureRepo = new FeatureRepository();
 		existingFeatures = new ArrayList<>();
 		existingTextFeatures = new ArrayList<>();
@@ -93,10 +94,12 @@ public class HateSpeechDetection {
 		} else {
 			existingFeatures = featureRepo.findFeatureByKind(config.getProperty(Utils.FEATURES_KIND));
 		}
+		Utils.FILE_LOGGER.info("Features in database: " + existingFeatures.size());
 		existingFeatures.forEach(feature -> {
 			TextFeatureRepository tfr = new TextFeatureRepository();
 			List<TextFeature> tfs = tfr.findTextFeatureByFeature(feature.getId());
 			if(!CollectionUtils.isEmpty(tfs)) {
+				Utils.FILE_LOGGER.info("Found text-feature relation for feature: " + feature.getDescription());
 				existingTextFeatures.addAll(tfs);
 			}
 		});

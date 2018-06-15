@@ -3,17 +3,13 @@ package gr.di.hatespeech.features;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-
 import gr.di.hatespeech.entities.Text;
 import gr.di.hatespeech.utils.Utils;
 import weka.core.tokenizers.NGramTokenizer;
-import weka.core.tokenizers.Tokenizer;
 
 /**
  * Ngram feature extractor extending the Base Vector Feature Extractor
@@ -21,7 +17,6 @@ import weka.core.tokenizers.Tokenizer;
  */
 public class NgramFeatureExtractor extends BaseVectorFeatureExtractor {
 	private static String startingMessageLog = "[" + NgramFeatureExtractor.class.getSimpleName() + "] ";
-	protected Map<String,Double> allTokens = new HashMap<>();
 
 	/**
 	 * Default constructor
@@ -41,7 +36,7 @@ public class NgramFeatureExtractor extends BaseVectorFeatureExtractor {
 	 */
 	@Override
 	public Map<String, Double> extractFeatures(Text text) {
-		Utils.FILE_LOGGER.info(startingMessageLog + "Extracting ngrams for text" + text.getId());
+		Utils.FILE_LOGGER.info(startingMessageLog + "Extracting ngrams for text " + text.getId());
 		List<String> elements = getNgramTokens(text);
 		features = allTokens;
 		elements.forEach(element -> addNgramFeature(startingMessageLog, element));
@@ -70,7 +65,7 @@ public class NgramFeatureExtractor extends BaseVectorFeatureExtractor {
 	@SuppressWarnings("unchecked")
 	private void loadNGrams() {
 		try {
-			ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+			ClassLoader classloader = this.getClass().getClassLoader();
 			InputStream inputStream = classloader.getResourceAsStream(Utils.NGRAM_SER);
 			ObjectInputStream ois = new ObjectInputStream(inputStream);
 			allTokens.putAll((HashMap<String,Double>)ois.readObject());
@@ -80,4 +75,5 @@ public class NgramFeatureExtractor extends BaseVectorFeatureExtractor {
 			e.printStackTrace();
 		}
 	}
+	
 }
