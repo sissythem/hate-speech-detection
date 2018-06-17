@@ -135,7 +135,9 @@ public class InstanceGenerator {
 	 */
 	public Instances readInstancesFromFile(String startPath, int folderNumber, String filename) {
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(new File(startPath + folderNumber + "/" + filename)));
+			String completePath = startPath + folderNumber + "/" + filename;
+			Utils.FILE_LOGGER.info(startingMessageLog + "Total path: " + completePath);
+			BufferedReader reader = new BufferedReader(new FileReader(new File(completePath)));
 			Instances data = new Instances(reader);
 			data.setClassIndex(0);
 			return data;

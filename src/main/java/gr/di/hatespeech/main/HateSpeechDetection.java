@@ -63,7 +63,9 @@ public class HateSpeechDetection {
 
 			Utils.FILE_LOGGER.info(startingMessageLog + "PROGRAM FINISH");
 			Utils.FILE_LOGGER.info(startingMessageLog + "==================");
-			EmailSender.Send(hsd.emailConfig);
+			if(Boolean.parseBoolean(hsd.config.getProperty(Utils.SEND_EMAIL))) {
+				EmailSender.Send(hsd.emailConfig);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			Utils.FILE_LOGGER.error(startingMessageLog + e.getMessage(), e);

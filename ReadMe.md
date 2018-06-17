@@ -61,3 +61,7 @@ adding the database source and the driver.
    	* HateSpeech: 1407
    	* OffensiveLanguage: 18503
    	* Clean: 4057
+   	
+## Metrics
+
+* F-Measure: calculated using function weightedFMeasure which calculates the average F-Measure.

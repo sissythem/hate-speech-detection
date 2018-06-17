@@ -39,7 +39,7 @@ public abstract class BaseClassifier implements Classifier {
 		evaluation.addCrossValidationEval(eval);
 		eval.crossValidateModel(classifier, trainingInstances, folds, new Random(run));
 		Double kappa = eval.kappa();
-		Double fMeasure = eval.weightedFMeasure();
+		Double fMeasure = eval.weightedFMeasure(); //average F-Measure
 		String confusionMatrix = eval.toMatrixString("Confusion matrix: ");
 		Utils.FILE_LOGGER.info(startingMessageLog + "Kappa - " + kappa + ", fMeasure - " + fMeasure + ", confusionMatrix - " + confusionMatrix);
 		} catch (Exception e) {
@@ -63,7 +63,7 @@ public abstract class BaseClassifier implements Classifier {
 			evaluation.setTestPredictions(testEval.evaluateModel(classifier, testInstances));
 			evaluation.setTestEval(testEval);
 			Double kappa = testEval.kappa();
-			Double fMeasure = testEval.weightedFMeasure();
+			Double fMeasure = testEval.weightedFMeasure(); //average F-Measure
 			String confusionMatrix = testEval.toMatrixString("Confusion matrix: ");
 			Utils.FILE_LOGGER.info(startingMessageLog + "Kappa - " + kappa + ", fMeasure - " + fMeasure + ", confusionMatrix - " + confusionMatrix);
 			Utils.FILE_LOGGER.info(startingMessageLog + "Summary: " + testEval.toSummaryString());

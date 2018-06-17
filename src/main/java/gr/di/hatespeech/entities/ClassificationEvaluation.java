@@ -57,7 +57,7 @@ public class ClassificationEvaluation {
 		Double recallhs = evaluation.recall(0);
 		Double recallcl = evaluation.recall(1);
 		Double kappa = evaluation.kappa();
-		Double fMeasure = evaluation.weightedFMeasure();
+		Double fMeasure = evaluation.weightedFMeasure(); // average F-Measure
 		String confusionMatrix = evaluation.toMatrixString("Confusion matrix: ");
 		return Arrays.asList("Hate speech precision: " + precisionhs,
 				"Non hate speech precision: " + precisioncl, "Hate Speech recall: " + recallhs,

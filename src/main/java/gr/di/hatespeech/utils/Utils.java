@@ -43,6 +43,7 @@ public class Utils {
 	public static final String SPELLING = "spelling";
 	public static final String SYNTAX = "syntax";
 	public static final String INSTANCES_TO_FILE = "instancesToFile";
+	public static final String SEND_EMAIL = "sendEmail";
 	
 	
 	/** CSV/Database columns**/
