@@ -118,7 +118,7 @@ public class ClassificationRunner {
 	/**
 	 * Method to execute cross validation with the 3 classifiers
 	 * @param trainingInstances, instances to cross validate each classifier
-	 * @return
+	 * @return a list with ClassificationEvaluation
 	 */
 	protected List<ClassificationEvaluation> crossValidate(Instances trainingInstances) {
 		List<ClassificationEvaluation> evaluations = new ArrayList<>();
