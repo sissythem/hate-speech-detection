@@ -47,3 +47,17 @@ adding the database source and the driver.
 		* syntax: generate or not syntax features
 	* classificationType: select either "classification" or "crossValidation"
 	* Classifiers configuration: define which classifiers will run by selecting true/false in the fields NaiveBayes, LogisticRegression and KNN
+	
+## Datasets
+
+* Single Label:
+	* HateSpeech: 24871
+	*  Clean: 14839
+* Multi Label (Racism, Sexism, Clean):
+	* Racism: 1911
+	* Sexism: 3050
+   	* Clean: 10782
+* Multi Label (HateSpeech, OffensiveLanguage, Clean):
+   	* HateSpeech: 1407
+   	* OffensiveLanguage: 18503
+   	* Clean: 4057

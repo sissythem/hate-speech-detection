@@ -62,6 +62,7 @@ public class Utils {
 	public static final String KNN_CLASSIFIER = "KNN";
 	public static final String LOGISTIC_REGRESSION_CLASSIFIER = "LogisticRegression";
 	public static final String NAIVE_BAYES_CLASSIFIER = "NaiveBayes";
+	public static final String RANDOM_FOREST_CLASSIFIER = "RandomForest";
 	
 	/** Table names**/
 	public static final String TEXT_TABLE = "texts";

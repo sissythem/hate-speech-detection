@@ -9,6 +9,7 @@ import java.util.Properties;
 import gr.di.hatespeech.classifiers.KNNClassifier;
 import gr.di.hatespeech.classifiers.LogisticRegressionClassifier;
 import gr.di.hatespeech.classifiers.NaiveBayesClassifier;
+import gr.di.hatespeech.classifiers.RandomForestClassifier;
 import gr.di.hatespeech.entities.ClassificationEvaluation;
 import gr.di.hatespeech.utils.Utils;
 import weka.core.Instances;
@@ -25,6 +26,7 @@ public class ClassificationRunner {
 	private NaiveBayesClassifier naiveBayes;
 	private LogisticRegressionClassifier logisticRegressionClassifier;
 	private KNNClassifier knnClassifier;
+	private RandomForestClassifier rfClassifier;
 
 	public ClassificationRunner(int foldNumber, Properties config, String pathToInstances, Instances trainingInstances,
 			Instances testInstances) {
@@ -51,6 +53,7 @@ public class ClassificationRunner {
 				naiveBayes = new NaiveBayesClassifier();
 				logisticRegressionClassifier = new LogisticRegressionClassifier();
 				knnClassifier = new KNNClassifier();
+				rfClassifier = new RandomForestClassifier();
 				break;
 			case "crossValidation":
 				int numFolds = Integer.parseInt(config.getProperty(Utils.NUM_FOLDS));
@@ -58,6 +61,7 @@ public class ClassificationRunner {
 				naiveBayes = new NaiveBayesClassifier(numFolds, runs);
 				logisticRegressionClassifier = new LogisticRegressionClassifier(numFolds, runs);
 				knnClassifier = new KNNClassifier(numFolds, runs);
+				rfClassifier = new RandomForestClassifier(numFolds, runs);
 				break;
 		}
 	}
@@ -98,6 +102,10 @@ public class ClassificationRunner {
 			Utils.FILE_LOGGER.info(startingMessageLog + "Classifying with Knn Classifier");
 			evaluations.add(knnClassifier.classify(trainingInstances, testInstances));
 		}
+		if(Boolean.parseBoolean(config.getProperty(Utils.RANDOM_FOREST_CLASSIFIER))) {
+			Utils.FILE_LOGGER.info(startingMessageLog + "Classifying with Random Forest Classifier");
+			evaluations.add(rfClassifier.classify(trainingInstances, testInstances));
+		}
 		evaluations.forEach(classificationEvaluation -> {
 			classificationEvaluation.writeClassificationEvalToFile(classificationEvaluation.getTrainEval(),
 					pathToInstances, foldNumber, Utils.TRAIN_INSTANCES_FILE);
@@ -124,12 +132,14 @@ public class ClassificationRunner {
 			evaluations.add(logisticRegressionClassifier.crossValidate(trainingInstances));
 		}
 		if (Boolean.parseBoolean(config.getProperty(Utils.KNN_CLASSIFIER))) {
-			Utils.FILE_LOGGER.info(startingMessageLog + "Classifying with Knn Classifier");
+			Utils.FILE_LOGGER.info(startingMessageLog + "Cross Validation with Knn Classifier");
 			evaluations.add(knnClassifier.crossValidate(trainingInstances));
 		}
-		evaluations.forEach(classificationEvaluation -> {
-			classificationEvaluation.writeCrossValidateResultsToFile(pathToInstances, classificationEvaluation.getClassifierName());
-		});
+		if(Boolean.parseBoolean(config.getProperty(Utils.RANDOM_FOREST_CLASSIFIER))) {
+			Utils.FILE_LOGGER.info(startingMessageLog + "Cross Validation with Random Forest Classifier");
+			evaluations.add(rfClassifier.crossValidate(trainingInstances));
+		}
+		evaluations.forEach(classificationEvaluation -> classificationEvaluation.writeCrossValidateResultsToFile(pathToInstances, classificationEvaluation.getClassifierName()));
 		return evaluations;
 	}
 
