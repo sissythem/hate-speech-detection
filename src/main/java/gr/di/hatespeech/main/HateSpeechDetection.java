@@ -41,7 +41,7 @@ public class HateSpeechDetection {
 		try {
 			Utils.FILE_LOGGER.info(startingMessageLog + "PROGRAM START");
 			HateSpeechDetection hsd = new HateSpeechDetection();
-			
+
 			// read config.properties
 			Utils utils = new Utils();
 			hsd.config = utils.readConfigurationFile(startingMessageLog, Utils.CONFIG_FILE);
@@ -128,12 +128,12 @@ public class HateSpeechDetection {
 	private void runFolds() {
 		int numFolds = Integer.parseInt(config.getProperty(Utils.NUM_FOLDS));
 		String pathToInstances = getPathToInstances();
-		
+
 		if (config.getProperty(Utils.INSTANCES).equals("new")) {
 			int dataset = Integer.parseInt(config.getProperty(Utils.DATASET));
 			initTotalFolds(numFolds, dataset);
 		}
-		
+
 		if (Boolean.parseBoolean(config.getProperty(Utils.PARALLEL))) {
 			List<FoldRunner> runnables = initThreads(numFolds, pathToInstances);
 			Executor exec = Executors.newFixedThreadPool(numFolds);
@@ -148,7 +148,7 @@ public class HateSpeechDetection {
 			}
 		}
 	}
-	
+
 	/**
 	 * Get data per fold
 	 * @param numFolds, total number of folds

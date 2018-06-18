@@ -65,3 +65,4 @@ adding the database source and the driver.
 ## Metrics
 
 * F-Measure: calculated using function weightedFMeasure which calculates the average F-Measure.
+* Kappa: metric that compares an Observed Accuracy with an Expected Accuracy (random chance). Used to evaluate a single classifier as well as to evaluate classifiers amongst themselves. Also, takes into account random chance which generally means it is less misleading than simply use accuracy as a metric (an Observed Accuracy of 80% is a lot less impressive with an Expected Accuracy of 75% versus an Expected Accuracy of 50%). Observed Accuracy is simply the number of instances that were classified correctly throughout the entire confusion matrix. Expected Accuracy is defined as the accuracy that any random classifier would be expected to achieve based on the confusion matrix. The Expected Accuracy is directly related to the number of instances of each class
