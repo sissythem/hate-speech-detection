@@ -182,6 +182,9 @@ public class HateSpeechDetection {
 			case "all":
 				pathToInstances = pathToInstances + Utils.PATH_ALL_INSTANCES;
 				break;
+			case "vectorAll":
+				pathToInstances = pathToInstances + Utils.PATH_VECTOR_ALL_INSTANCES;
+				break;
 			case "bow":
 				pathToInstances = pathToInstances + Utils.PATH_BOW_INSTANCES;
 				break;
