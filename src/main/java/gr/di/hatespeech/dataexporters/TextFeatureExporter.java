@@ -43,7 +43,7 @@ public class TextFeatureExporter extends AbstractDataExporter<TextFeature>{
 				EntityManager em = factory.createEntityManager();
 				for (Entry<String, Double> entry : f.entrySet()) {
 					if(!entry.getValue().equals(0.0)) {
-						Feature feature = featureRepo.findFeatureByDescription(entry.getKey()).get(0);
+						Feature feature = featureRepo.findFeatureByDescription(entry.getKey());
 						TextFeature textFeature = new TextFeature();
 						textFeature.setFeature(feature);
 						textFeature.setText(text);

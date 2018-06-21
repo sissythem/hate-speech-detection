@@ -2,31 +2,36 @@ package gr.di.hatespeech.main;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
-
-import gr.di.hatespeech.dataexporters.FeatureExporter;
-import gr.di.hatespeech.entities.Feature;
-import gr.di.hatespeech.entities.TextFeature;
-import gr.di.hatespeech.features.*;
-import gr.di.hatespeech.repositories.FeatureRepository;
-import gr.di.hatespeech.utils.Utils;
-import org.apache.commons.lang3.StringUtils;
-
-import gr.di.hatespeech.entities.Text;
-import gr.di.hatespeech.repositories.TextRepository;
-import gr.di.hatespeech.utils.Logger;
-import gr.di.hatespeech.utils.LoggerFactory;
-import weka.core.tokenizers.CharacterNGramTokenizer;
-import weka.core.tokenizers.NGramTokenizer;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+
+import org.apache.commons.lang3.StringUtils;
+
+import gr.di.hatespeech.dataexporters.FeatureExporter;
+import gr.di.hatespeech.entities.Feature;
+import gr.di.hatespeech.entities.Text;
+import gr.di.hatespeech.entities.TextFeature;
+import gr.di.hatespeech.features.CharacterNGramFeatureExtractor;
+import gr.di.hatespeech.features.InstanceGenerator;
+import gr.di.hatespeech.features.NgramFeatureExtractor;
+import gr.di.hatespeech.repositories.FeatureRepository;
+import gr.di.hatespeech.repositories.TextRepository;
+import gr.di.hatespeech.utils.Logger;
+import gr.di.hatespeech.utils.LoggerFactory;
+import gr.di.hatespeech.utils.Utils;
+import weka.core.tokenizers.CharacterNGramTokenizer;
+import weka.core.tokenizers.NGramTokenizer;
 
 public class NgramGenerator {
 	private static final Logger logger = LoggerFactory.getLogger(NgramGenerator.class);
@@ -41,8 +46,6 @@ public class NgramGenerator {
 //		ngramGenerator.getAllNgrams();
 //		ngramGenerator.produceAllCharNGrams();
 //		ngramGenerator.generateFeatures();
-//		ngramGenerator.read("./ngrams.ser");
-//		ngramGenerator.read("./charngrams.ser");
 		ngramGenerator.extractNgrams();
 	}
 	
@@ -61,33 +64,37 @@ public class NgramGenerator {
 	private void extractTextFeatures(NgramFeatureExtractor ngramFeatureExtractor, CharacterNGramFeatureExtractor characterNGramFeatureExtractor) {
 		TextRepository textRepo = new TextRepository();
 		FeatureRepository featureRepository = new FeatureRepository();
-		List<Text> texts = textRepo.findAllTexts();
-		
+		List<Text> texts = textRepo.findAllTexts().stream().filter(text -> !StringUtils.isBlank(text.getPrepMessage()) && text.getId()>25000 && text.getId()<26001).collect(Collectors.toList());
+		LocalDateTime totalStart = Utils.tic();
 		factory = Persistence.createEntityManagerFactory(Utils.PERSISTENCE_UNIT_NAME);
 		EntityManager em = factory.createEntityManager();
-		allTokens = ngramFeatureExtractor.getAllTokens();
-		allTokens.putAll(characterNGramFeatureExtractor.getAllTokens());
-		texts.stream()
-				.filter(text -> !StringUtils.isBlank(text.getPrepMessage()) && text.getId() > 1000 && text.getId()<2001).forEach(text -> {
-					Utils.FILE_LOGGER.info("Text: " + text.getPrepMessage());
-					Map<String, Double> features = ngramFeatureExtractor.extractFeatures(text);
-					features.putAll(characterNGramFeatureExtractor.extractFeatures(text));
-					for (Entry<String, Double> entry : allTokens.entrySet()) {
+
+		texts.forEach(text -> {
+			Utils.FILE_LOGGER.info("Text: " + text.getPrepMessage());
+			Map<String, Double> features = ngramFeatureExtractor.extractFeatures(text);
+			features.putAll(characterNGramFeatureExtractor.extractFeatures(text));
+			em.getTransaction().begin();
+			LocalDateTime start = Utils.tic();
+			logger.info("Creating text features for text: " + text.getId());
+			for (Entry<String, Double> entry : features.entrySet()) {
+				if (!entry.getValue().equals(0.0)) {
+					Feature feature = featureRepository.findFeatureByDescription(entry.getKey());
+					if (feature != null) {
 						TextFeature textFeature = new TextFeature();
-						if (features.containsKey(entry.getKey()) && !features.get(entry.getKey()).equals(0.0)) {
-							Feature feature = featureRepository.findFeatureByDescription(entry.getKey()).stream()
-									.findFirst().get();
-							textFeature.setFeature(feature);
-					textFeature.setText(text);
-					textFeature.setValue(features.get(entry.getKey()));
-					em.getTransaction().begin();
-					em.persist(textFeature);
-					em.getTransaction().commit();
+						textFeature.setFeature(feature);
+						textFeature.setText(text);
+						textFeature.setValue(features.get(entry.getKey()));
+						em.persist(textFeature);
+					}
 				}
 			}
+			em.getTransaction().commit();
+			logger.info("Finished processing text: " + text.getId());
+			logger.info("Time needed: " + Utils.toc(start));
 		});
 		em.close();
 		factory.close();
+		logger.info("Total time needed: " + Utils.toc(totalStart));
 	}
 
 	private void generateFeatures() {
@@ -115,28 +122,6 @@ public class NgramGenerator {
 		em.getTransaction().begin();
 		em.persist(feature);
 		em.getTransaction().commit();
-	}
-	
-	@SuppressWarnings("unchecked")
-	private void read(String filename) {
-		FeatureExporter featureExporter = new FeatureExporter();
-		try {
-			factory = Persistence.createEntityManagerFactory(Utils.PERSISTENCE_UNIT_NAME);
-			EntityManager em = factory.createEntityManager();
-			ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-			InputStream inputStream = classloader.getResourceAsStream(filename);
-			ObjectInputStream ois = new ObjectInputStream(inputStream);
-			allTokens.putAll((HashMap<String, Double>) ois.readObject());
-			ois.close();
-			inputStream.close();
-			for(String descr : allTokens.keySet()) {
-				featureExporter.exportFeatureToDatabase(em, descr);
-			}
-			em.close();
-			factory.close();
-		} catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private void getAllNgrams() {

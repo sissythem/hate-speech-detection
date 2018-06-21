@@ -61,6 +61,10 @@ adding the database source and the driver.
    	* HateSpeech: 1407
    	* OffensiveLanguage: 18503
    	* Clean: 4057
+
+## Classification
+
+* Problem with KNN: tested for training in Weka GUI, with n=3 training is quick while with n=9 takes time
    	
 ## Metrics
 

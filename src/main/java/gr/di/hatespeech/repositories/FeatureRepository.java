@@ -8,6 +8,7 @@ import javax.persistence.Persistence;
 
 import gr.di.hatespeech.entities.Feature;
 import gr.di.hatespeech.utils.Utils;
+import org.apache.commons.collections.CollectionUtils;
 
 public class FeatureRepository extends AbstractRepository<Feature> {
 	private EntityManager em;
@@ -58,10 +59,15 @@ public class FeatureRepository extends AbstractRepository<Feature> {
 		return namedQuery(em, Utils.FEATURE_FIND_BY_KIND, parameters);
 	}
 	
-	public List<Feature> findFeatureByDescription(String description) {
+	public Feature findFeatureByDescription(String description) {
 		HashMap<String, Object> parameters = new HashMap<>();
 		parameters.put("description", description);
-		return namedQuery(em, Utils.FEATURE_FIND_BY_DESCRIPTION, parameters);
+		List<Feature> features = namedQuery(em, Utils.FEATURE_FIND_BY_DESCRIPTION, parameters);
+		if(!CollectionUtils.isEmpty(features)) {
+			return features.get(0);
+		} else {
+			return null;
+		}
 	}
 	
 }
