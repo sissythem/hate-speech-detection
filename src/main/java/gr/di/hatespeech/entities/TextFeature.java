@@ -23,7 +23,8 @@ import gr.di.hatespeech.utils.Utils;
 	@NamedQuery(name=Utils.TEXT_FEATURE_FIND_BY_ID, query="SELECT t FROM TextFeature t WHERE t.id = :id"),
 	@NamedQuery(name=Utils.TEXT_FEATURE_FIND_BY_TEXT, query="SELECT t FROM TextFeature t WHERE t.text.id = :textId"),
 	@NamedQuery(name=Utils.TEXT_FEATURE_FIND_BY_FEATURE, query="SELECT t FROM TextFeature t WHERE t.feature.id = :featureId"),
-	@NamedQuery(name=Utils.TEXT_FEATURE_FIND_BY_TEXT_AND_FEATURE, query="SELECT t FROM TextFeature t WHERE t.text.id = :textId AND t.feature.id = :featureId")
+	@NamedQuery(name=Utils.TEXT_FEATURE_FIND_BY_TEXT_AND_FEATURE, query="SELECT t FROM TextFeature t WHERE t.text.id = :textId AND t.feature.id = :featureId"),
+	@NamedQuery(name=Utils.TEXT_FEATURE_FIND_BY_FEATURE_KIND, query="SELECT t FROM TextFeature t WHERE t.feature.kind = :kind")
 })
 public class TextFeature implements Serializable {
 	@Id

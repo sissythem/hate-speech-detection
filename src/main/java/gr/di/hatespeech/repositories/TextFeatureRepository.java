@@ -63,7 +63,6 @@ public class TextFeatureRepository extends AbstractRepository<TextFeature> {
 		} else {
 			return null;
 		}
-		
 	}
 	
 	public List<TextFeature> findTextFeatureByText(Long textId) {
@@ -76,5 +75,11 @@ public class TextFeatureRepository extends AbstractRepository<TextFeature> {
 		HashMap<String, Object> parameters = new HashMap<>();
 		parameters.put("featureId", featureId);
 		return namedQuery(em, Utils.TEXT_FEATURE_FIND_BY_FEATURE, parameters);
+	}
+
+	public List<TextFeature> findTextFeatureByFeatureKind(String kind) {
+		HashMap<String, Object> parameters = new HashMap<>();
+		parameters.put("kind", kind);
+		return namedQuery(em, Utils.TEXT_FEATURE_FIND_BY_FEATURE_KIND, parameters);
 	}
 }

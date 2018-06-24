@@ -87,6 +87,7 @@ public class Utils {
 	public static final String TEXT_FEATURE_FIND_BY_TEXT = "TextFeature.findByText";
 	public static final String TEXT_FEATURE_FIND_BY_FEATURE = "TextFeature.findByFeature";
 	public static final String TEXT_FEATURE_FIND_BY_TEXT_AND_FEATURE = "TextFeature.findByTextAndFeature";
+	public static final String TEXT_FEATURE_FIND_BY_FEATURE_KIND = "TextFeature.findByFeatureKind";
 	
 	/** Path to instances files **/
 	public static final String PATH_ALL_INSTANCES = "all/fold";

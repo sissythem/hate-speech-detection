@@ -43,9 +43,9 @@ public class NgramGenerator {
 	public static void main(String[] args) {
 		NgramGenerator ngramGenerator = new NgramGenerator();
 //		ngramGenerator.mergeInstances();
-//		ngramGenerator.getAllNgrams();
-//		ngramGenerator.produceAllCharNGrams();
-//		ngramGenerator.generateFeatures();
+		ngramGenerator.getAllNgrams();
+		ngramGenerator.produceAllCharNGrams();
+		ngramGenerator.generateFeatures();
 		ngramGenerator.extractNgrams();
 	}
 	
@@ -64,7 +64,7 @@ public class NgramGenerator {
 	private void extractTextFeatures(NgramFeatureExtractor ngramFeatureExtractor, CharacterNGramFeatureExtractor characterNGramFeatureExtractor) {
 		TextRepository textRepo = new TextRepository();
 		FeatureRepository featureRepository = new FeatureRepository();
-		List<Text> texts = textRepo.findAllTexts().stream().filter(text -> !StringUtils.isBlank(text.getPrepMessage()) && text.getId()>25000 && text.getId()<26001).collect(Collectors.toList());
+		List<Text> texts = textRepo.findAllTexts().stream().filter(text -> !StringUtils.isBlank(text.getPrepMessage()) && text.getId()<30).collect(Collectors.toList());
 		LocalDateTime totalStart = Utils.tic();
 		factory = Persistence.createEntityManagerFactory(Utils.PERSISTENCE_UNIT_NAME);
 		EntityManager em = factory.createEntityManager();

@@ -10,7 +10,6 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import gr.di.hatespeech.runners.InstanceCrossValidationRunner;
-import org.apache.commons.collections.CollectionUtils;
 
 import gr.di.hatespeech.entities.Feature;
 import gr.di.hatespeech.entities.Text;
@@ -97,14 +96,9 @@ public class HateSpeechDetection {
 			existingFeatures = featureRepo.findFeatureByKind(config.getProperty(Utils.FEATURES_KIND));
 		}
 		Utils.FILE_LOGGER.info("Features in database: " + existingFeatures.size());
-		existingFeatures.forEach(feature -> {
-			TextFeatureRepository tfr = new TextFeatureRepository();
-			List<TextFeature> tfs = tfr.findTextFeatureByFeature(feature.getId());
-			if(!CollectionUtils.isEmpty(tfs)) {
-				Utils.FILE_LOGGER.info("Found text-feature relation for feature: " + feature.getDescription());
-				existingTextFeatures.addAll(tfs);
-			}
-		});
+		TextFeatureRepository tfr = new TextFeatureRepository();
+		existingTextFeatures = tfr.findTextFeatureByFeatureKind(config.getProperty(Utils.FEATURES_KIND));
+		Utils.FILE_LOGGER.info("Got all text features for kind" + config.getProperty(Utils.FEATURES_KIND));
 	}
 
 	/**

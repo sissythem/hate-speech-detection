@@ -49,7 +49,7 @@ public class FoldRunner implements Runnable {
 		} else {
 			readInstancesFromFile(foldNumber);
 		}
-		runClassification(foldNumber);
+		//runClassification(foldNumber);
 		long seconds = Utils.toc(start);
 		Utils.FILE_LOGGER.info(startingMessageLog + "Time needded in seconds to execute fold no " + foldNumber
 				+ " is: " + seconds);
