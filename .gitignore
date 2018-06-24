@@ -35,6 +35,7 @@ hate-speech-detection.iml
 release.properties
 pom.xml.releaseBackup
 pom.xml.tag
+neural_networks/__pycache__/
 
 # Project specific
 logs/
