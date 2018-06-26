@@ -30,10 +30,10 @@ def train_classifier(data, num_classes, train_labels, train_features):
                           loss='categorical_crossentropy',
                           metrics=['accuracy'])
             # Convert labels to categorical one-hot encoding
-            one_hot_labels = keras.utils.to_categorical(train_labels, num_classes=10)
+            one_hot_labels = keras.utils.to_categorical(train_labels, num_classes=num_classes)
 
             # Train the model, iterating on the data in batches of 32 samples
-            model.fit(train_features, one_hot_labels, epochs=10, batch_size=32)
+            model.fit(train_features, one_hot_labels, epochs=10, batch_size=100)
         elif num_classes == 2:
             # For a binary classification problem
             model.compile(optimizer='rmsprop',

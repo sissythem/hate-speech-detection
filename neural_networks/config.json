@@ -1,7 +1,7 @@
 {
   "folds":10,
   "path_to_instances":"/home/sissy/Documents/Professional/University/UOA/Graduate/Thesis/hate-speech-detection/instances/",
-  "dataset_folder":"multilabel0",
+  "dataset_folder":"multilabel1",
   "feature_folder":"vector/ngrams",
   "neighbors": 9,
   "classifiers":["KNN"],

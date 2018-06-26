@@ -5,17 +5,17 @@
 change the database name (replace the DATABASE in line 9) and add your credentials in username and password. 
 Finally, you need to add MySQL driver in the project's classpath and configure the project as a JPA project, 
 adding the database source and the driver.
-* Get the database from here: https://drive.google.com/drive/folders/1DVPmna1RsAuAvNxrMMYKYZqHDbsKoSvD?usp=sharing
-* Get the jar files for JInsect and OpenJGraph from here: https://drive.google.com/open?id=1fEwP078qB0SlHIjGuFmEHBuk4sIZQr_m
-* Database data in csv format from here: https://drive.google.com/open?id=1TS6V_YqzrAExYamOdD4m6DI-TXUEuD5h
+* Get the database from here: https://www.dropbox.com/sh/xt7ka9m3jdq9cpf/AAAtPW5JxMBAsxdUZ7ctGiwga?dl=0
+* Get the jar files for JInsect and OpenJGraph from here: https://www.dropbox.com/sh/yya619oixlfk06n/AACwiFAtoblx4z5WTJn07mfua?dl=0
+* Database data in csv format from here: https://www.dropbox.com/sh/2i1iafx8d3l8xnm/AACzDR9H3NuITCELi8_86YPpa?dl=0
 * If you want to re-create the features and instances, copy below folders in src/main/resources :
-    * BOW features: https://drive.google.com/open?id=1cTZvXqqfB0n2mhcv3P8F19300nCxW0Wh
-    * ngrams: https://drive.google.com/open?id=1l42mUYEPssEPwF9IQUVmp7Iw-eyR7Ex5
-    * Spelling: https://drive.google.com/open?id=1bd3CIIft8CoE_MQ2wLgEpDcLeysrsJPm
-    * Preprocessing: https://drive.google.com/open?id=1csaBomaePGufhLfAJZCDrS7S1eYu4_BP
-    * word2vec: https://drive.google.com/open?id=1DKPRjQFIPWJIQLOTEUAg-qwTPK2dXujs
+    * BOW features: https://www.dropbox.com/sh/j2qqcimaqtcox2g/AADhkkPWQCQBg_IMMmsp_6ANa?dl=0
+    * ngrams: https://www.dropbox.com/sh/qoj1405kt1alb4v/AACHXFeKQfadhQxEh3pA9B81a?dl=0
+    * Spelling: https://www.dropbox.com/sh/mfejbropwdakot7/AAArF4f7olFkkEQCWrlJZScGa?dl=0
+    * Preprocessing: https://www.dropbox.com/sh/ghps231vbkinztf/AADk-P3HoKXy93tRP_iffAuWa?dl=0
+    * word2vec: https://www.dropbox.com/sh/dynm29i7430h2g6/AAAbxOeOdIbOLFWk5kONS-Via?dl=0
 * Also in the root folder of the project create a logs folder to save the program's logs.
-* In case you do not want to produce new instances, you can find the instances I have produced here: https://drive.google.com/open?id=1jOfkrer7K75H7zjJL6PoMH93pBflV6Yd
+* In case you do not want to produce new instances, you can find the instances I have produced here: https://www.dropbox.com/sh/sdifspbc374gewz/AAALrk3CddDIJxe_meU0mMKUa?dl=0
 
 ## Configurations
 

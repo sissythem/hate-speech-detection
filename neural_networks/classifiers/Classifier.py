@@ -1,5 +1,8 @@
-from classifiers import LogisticRegressionClassifier as lr, RandomForestClassifier as rf, NaiveBayesClassifier as nb, \
-    NNClassifier as nn, KNNClassifier as knn
+import classifiers.LogisticRegressionClassifier as lr
+import classifiers.RandomForestClassifier as rf
+import classifiers.NaiveBayesClassifier as nb
+import classifiers.NNClassifier as nn
+import classifiers.KNNClassifier as knn
 
 
 def classify(data, classifier, num_classes, train_labels, train_features, test_labels, test_features):
