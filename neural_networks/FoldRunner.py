@@ -17,14 +17,15 @@ def run_fold(data, i, results):
     print("Classifying")
     for classifier in data["classifiers"]:
         confusion_matrix = Classifier.classify(data, classifier, num_classes, train_labels, train_features, test_labels, test_features)
-        results[classifier] = write_results_to_file(data, fold, classifier, confusion_matrix, test_labels_dict, results)
+        results = write_results_to_file(data, fold, classifier, confusion_matrix, test_labels_dict, results)
     return results
 
 
 def write_results_to_file(data, fold, classifier, confusion_matrix, test_labels_dict, results):
     macro_precision, micro_precision, macro_recall, micro_recall, macro_f, micro_f = get_measures(confusion_matrix, test_labels_dict)
     measure_tuples = macro_precision, micro_precision, macro_recall, micro_recall, macro_f, micro_f
-    results[classifier] = []
+    if classifier not in results:
+        results[classifier] = []
     results[classifier].append(measure_tuples)
     filename = "Result_test_" + classifier + ".txt"
     result_file = join(data["path_to_instances"], data["dataset_folder"], data["feature_folder"], fold, filename)

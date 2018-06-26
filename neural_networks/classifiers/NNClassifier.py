@@ -8,7 +8,7 @@ import numpy as np
 
 def classify(data, num_classes, train_labels, train_features, test_labels, test_features):
     classifier = train_classifier(data, num_classes, train_labels, train_features)
-    conf_matrix = test_classifier(classifier, num_classes, data, test_labels, test_features)
+    conf_matrix = test_classifier(classifier, data, test_labels, test_features)
     return conf_matrix
 
 
@@ -16,8 +16,8 @@ def train_classifier(data, num_classes, train_labels, train_features):
     nn_library = data["nn_library"]
     if nn_library == "scikit-learn":
         print("Training MLP classifier from scikit-learn")
-        mlpClassifier = MLPClassifier()
-        return mlpClassifier.fit(train_features, train_labels)
+        mlp_classifier = MLPClassifier()
+        return mlp_classifier.fit(train_features, train_labels)
     elif nn_library == "keras":
         print("Creating Sequential model in keras")
         data_dimension = train_features.shape[1]
@@ -29,7 +29,6 @@ def train_classifier(data, num_classes, train_labels, train_features):
             Dense(num_classes, name="Dense_to_numclasses"),
             Activation('softmax', name="classification_activation"),
         ])
-        print("Building model for multi-class problem")
         model.compile(optimizer='rmsprop',
                       loss='categorical_crossentropy',
                       metrics=['accuracy'])
@@ -39,7 +38,7 @@ def train_classifier(data, num_classes, train_labels, train_features):
         return model
 
 
-def test_classifier(classifier, num_classes, data, test_labels, test_features):
+def test_classifier(classifier, data, test_labels, test_features):
     nn_library = data["nn_library"]
     predicted_labels = []
     if nn_library == "scikit-learn":

@@ -1,8 +1,8 @@
 {
   "folds":10,
   "path_to_instances":"/home/sissy/Documents/Professional/University/UOA/Graduate/Thesis/hate-speech-detection/instances/",
-  "dataset_folder":"singlelabel",
-  "feature_folder":"graph",
+  "dataset_folder":"multilabel1",
+  "feature_folder":"vector/bow",
   "neighbors":9,
   "epochs":10,
   "batch_size":100,

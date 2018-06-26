@@ -18,8 +18,7 @@ if __name__ == '__main__':
     for i in range(num_folds):
         results = fr.run_fold(data, i, results)
     for classifier in data["classifiers"]:
-        macro_precision, micro_precision, macro_recall, micro_recall, macro_f, micro_f = numpy.mean(results[classifier],
-                                                                                                    axis=0)
+        macro_precision, micro_precision, macro_recall, micro_recall, macro_f, micro_f = numpy.mean(results[classifier], axis=0)
         filename = "Result_avg_" + classifier + ".txt"
         result_file = join(data["path_to_instances"], data["dataset_folder"], data["feature_folder"], filename)
         with open(result_file, 'w') as f:
@@ -35,4 +34,3 @@ if __name__ == '__main__':
             f.write(micro_recall)
             f.write(macro_f)
             f.write(micro_f)
-
