@@ -19,9 +19,9 @@ def train_classifier(data, num_classes, train_labels, train_features):
         return mlpClassifier.fit(train_features, train_labels)
     elif nn_library == "keras":
         model = Sequential([
-            Dense(32, input_shape=(784,)),
+            Dense(100, input_shape=(784,)),
             Activation('relu'),
-            Dense(10),
+            Dense(50),
             Activation('softmax'),
         ])
         if num_classes > 2:
