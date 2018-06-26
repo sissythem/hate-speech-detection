@@ -1,5 +1,5 @@
 import DataFrameConverter as dfc
-import Classifier
+from classifiers import Classifier
 from os.path import join
 
 
@@ -12,10 +12,11 @@ def run_fold(data, i, results):
     print("Creating numpy arrays")
     train_labels, train_features, train_labels_dict = dfc.get_features_labels_arrays(train_df)
     test_labels, test_features, test_labels_dict = dfc.get_features_labels_arrays(test_df)
+    num_classes = len(train_labels_dict)
     print("Got labels and features for train and test datasets")
     print("Classifying")
     for classifier in data["classifiers"]:
-        confusion_matrix = Classifier.classify(data, train_labels, train_features, test_labels, test_features)
+        confusion_matrix = Classifier.classify(data, classifier, num_classes, train_labels, train_features, test_labels, test_features)
         results[classifier] = write_results_to_file(data, fold, classifier, confusion_matrix, test_labels_dict, results)
     return results
 

@@ -3,7 +3,7 @@ import FoldRunner as fr
 from os.path import join
 import numpy
 
-# , "KNN", "NaiveBayes", "RandomForest", "LogisticRegression"
+
 def read_configurations():
     with open('config.json') as json_data_file:
         data = json.load(json_data_file)
