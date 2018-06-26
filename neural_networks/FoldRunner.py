@@ -26,7 +26,8 @@ def write_results_to_file(data, fold, classifier, confusion_matrix, test_labels_
     measure_tuples = macro_precision, micro_precision, macro_recall, micro_recall, macro_f, micro_f
     results[classifier] = []
     results[classifier].append(measure_tuples)
-    result_file = join(data["path_to_instances"], data["dataset_folder"], data["feature_folder"], fold, "Result_test_Neural_Networks.txt")
+    filename = "Result_test_" + classifier + ".txt"
+    result_file = join(data["path_to_instances"], data["dataset_folder"], data["feature_folder"], fold, filename)
     with open(result_file, 'w') as f:
         confusion_matrix = "Confusion Matrix: " + str(confusion_matrix) + "\n"
         macro_precision = "Macro Precision: " + str(macro_precision) + "\n"
