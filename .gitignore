@@ -36,6 +36,8 @@ release.properties
 pom.xml.releaseBackup
 pom.xml.tag
 neural_networks/__pycache__/
+neural_networks/classifiers/__pycache__/
+
 
 # Project specific
 logs/
