@@ -1,5 +1,5 @@
 import DataFrameConverter as dfc
-import NNClassifier as nn
+import Classifier
 from os.path import join
 
 
@@ -14,15 +14,17 @@ def run_fold(data, i, results):
     test_labels, test_features, test_labels_dict = dfc.get_features_labels_arrays(test_df)
     print("Got labels and features for train and test datasets")
     print("Classifying")
-    confusion_Matrix = nn.classify(train_labels, train_features, test_labels, test_features)
-    results = write_Results_To_File(data, fold, confusion_Matrix, test_labels_dict, results)
+    for classifier in data["classifiers"]:
+        confusion_matrix = Classifier.classify(data, train_labels, train_features, test_labels, test_features)
+        results[classifier] = write_results_to_file(data, fold, classifier, confusion_matrix, test_labels_dict, results)
     return results
 
 
-def write_Results_To_File(data, fold, confusion_matrix, test_labels_dict, results):
+def write_results_to_file(data, fold, classifier, confusion_matrix, test_labels_dict, results):
     macro_precision, micro_precision, macro_recall, micro_recall, macro_f, micro_f = get_measures(confusion_matrix, test_labels_dict)
     measure_tuples = macro_precision, micro_precision, macro_recall, micro_recall, macro_f, micro_f
-    results.append(measure_tuples)
+    results[classifier] = []
+    results[classifier].append(measure_tuples)
     result_file = join(data["path_to_instances"], data["dataset_folder"], data["feature_folder"], fold, "Result_test_Neural_Networks.txt")
     with open(result_file, 'w') as f:
         confusion_matrix = "Confusion Matrix: " + str(confusion_matrix) + "\n"
