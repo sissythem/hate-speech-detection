@@ -24,7 +24,7 @@ def train_classifier(data, num_classes, train_labels, train_features):
         epochs = data["epochs"]
         batch_size=data["batch_size"]
         model = Sequential([
-            Dense(100, input_shape=(data_dimension,), name="first_dense"),
+            Dense(data["hidden_layers_size"], input_shape=(data_dimension,), name="first_dense"),
             Activation('relu', name="first_activation"),
             Dense(num_classes, name="Dense_to_numclasses"),
             Activation('softmax', name="classification_activation"),
