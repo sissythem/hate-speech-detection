@@ -4,24 +4,46 @@ from os.path import join
 
 
 def run_fold(data, i, results):
+    """
+    Used in main function to run each fold
+    :param data: the dictionary with all the configurations
+    :param i: the fold number
+    :param results: the dictionary containing the results for each classifier
+    :return: the results dictionary
+    """
     print("Running fold: ", i)
     fold = "fold" + str(i)
     print("Reading and converting arff files")
+    # use a converter for arff files to get pandas DataFrames
     train_df, test_df = dfc.convert_arff_to_dataframe(data, fold)
     print("Got train and test dataframes")
     print("Creating numpy arrays")
+    # separate labels from features and replace labels with numbers
     train_labels, train_features, train_labels_dict = dfc.get_features_labels_arrays(train_df)
     test_labels, test_features, test_labels_dict = dfc.get_features_labels_arrays(test_df)
     num_classes = len(train_labels_dict)
     print("Got labels and features for train and test datasets")
     print("Classifying")
     for classifier in data["classifiers"]:
+        # for each classifier specified in the configuration file, execute the classification task
+        # and return the confusion matrix
         confusion_matrix = Classifier.classify(data, classifier, num_classes, train_labels, train_features, test_labels, test_features)
+        # get micro/macro precision, recall and F-Measure for current fold
         results = write_results_to_file(data, fold, classifier, confusion_matrix, test_labels_dict, results)
     return results
 
 
 def write_results_to_file(data, fold, classifier, confusion_matrix, test_labels_dict, results):
+    """
+    Writes micro/macro precision, recall and F-Measure for current fold into a file
+    :param data: configuration dictionary
+    :param fold: current fold
+    :param classifier: current classifier
+    :param confusion_matrix: the results from the classification
+    :param test_labels_dict: initial labels (i.e. HateSpeech, Clean etc)
+    :param results: the dictionary with the results that will be used by main function to export the average from all folds
+    :return: the results dictionary
+    """
     macro_precision, micro_precision, macro_recall, micro_recall, macro_f, micro_f = get_measures(confusion_matrix, test_labels_dict)
     measure_tuples = macro_precision, micro_precision, macro_recall, micro_recall, macro_f, micro_f
     if classifier not in results:
@@ -48,7 +70,16 @@ def write_results_to_file(data, fold, classifier, confusion_matrix, test_labels_
 
 
 def get_measures(confusion_matrix, test_labels_dict):
+    """
+    Function that calculates micro/macro precision, recall and F-Measure of the specific fold
+    :param confusion_matrix: the results from the classification
+    :param test_labels_dict: the initial labels
+    :return: a tuple with micro/macro average for precision, recall and F-Measure
+    """
     # num_classes = len(test_labels_dict)
+
+    # variables with total TP/FP/FN will be used to calculate micro avg for precision and recall
+    # lists will be used to calculate macro avg for precision and recall
     total_true_positives = 0
     total_false_positives = 0
     total_false_negatives = 0

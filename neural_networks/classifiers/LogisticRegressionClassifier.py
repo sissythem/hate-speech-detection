@@ -4,6 +4,14 @@ import numpy as np
 
 
 def classify(train_labels, train_features, test_labels, test_features):
+    """
+       Classification with Logistic Regression classifier (scikit-learn library)
+       :param train_labels: the labels of the train instances
+       :param train_features: the features of the train instances
+       :param test_labels: the labels of the test instances
+       :param test_features: the features of the test features
+       :return:
+       """
     print("Running Logistic Regression classifier")
     log_reg = LogisticRegression()
     print("Training Logistic Regression classifier")
