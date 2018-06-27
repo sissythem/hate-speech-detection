@@ -29,6 +29,13 @@ public class ClassificationEvaluation {
 
 	}
 
+	/**
+	 * Writes into file the results from classification task
+	 * @param evaluation, weka evaluation
+	 * @param pathToInstances, the path to the instances used
+	 * @param foldNumber, the current fold
+	 * @param kind, the feature's kind used
+	 */
 	public void writeClassificationEvalToFile(Evaluation evaluation, String pathToInstances, int foldNumber, String kind) {
 		try {
 			List<String> lines = getResultLines(evaluation);
@@ -39,6 +46,11 @@ public class ClassificationEvaluation {
 		}
 	}
 
+	/**
+	 * Writes into a file the results from cross validation task
+	 * @param pathToInstances, path towards the instances used
+	 * @param classifierName, the name of the classifier
+	 */
 	public void writeCrossValidateResultsToFile(String pathToInstances, String classifierName) {
 		crossValidationEvals.stream().forEach(eval -> {
 			try {
@@ -51,6 +63,12 @@ public class ClassificationEvaluation {
 		});
 	}
 
+	/**
+	 * Gets the results to be exported in file
+	 * @param evaluation, weka evaluation
+	 * @return an array with the results to be exported in file
+	 * @throws Exception
+	 */
 	private List<String> getResultLines(Evaluation evaluation) throws Exception {
 		Double precisionhs = evaluation.precision(0);
 		Double precisioncl = evaluation.precision(1);

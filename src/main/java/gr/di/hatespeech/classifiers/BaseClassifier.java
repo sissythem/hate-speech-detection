@@ -33,7 +33,15 @@ public abstract class BaseClassifier implements Classifier {
 		evaluation.setClassifierName(classifierName);
 	}
 
-	public void evaluateCrossValidation(Instances trainingInstances, int run, weka.classifiers.Classifier classifier) {
+	/**
+	 * Evaluation results of the Cross Validation task using Weka
+	 * @param trainingInstances, weka instances provided to the classifier
+	 *                           for n-fold cross validation (the n parameter
+	 *                           is configured through the config.properties file)
+	 * @param run, the current run
+	 * @param classifier, the classifier used
+	 */
+	protected void evaluateCrossValidation(Instances trainingInstances, int run, weka.classifiers.Classifier classifier) {
 		try{
 		Evaluation eval = new Evaluation(trainingInstances);
 		evaluation.addCrossValidationEval(eval);
@@ -47,7 +55,13 @@ public abstract class BaseClassifier implements Classifier {
 		}
 	}
 
-	public void evaluateClassification(Instances trainingInstances, Instances testInstances, weka.classifiers.Classifier classifier) {
+	/**
+	 * Evaluation results for Classification task using Weka library
+	 * @param trainingInstances, weka instances used for training
+	 * @param testInstances, weka instances used for testing
+	 * @param classifier, the classifier used
+	 */
+	protected void evaluateClassification(Instances trainingInstances, Instances testInstances, weka.classifiers.Classifier classifier) {
 
 		try {
 			Utils.FILE_LOGGER.info(startingMessageLog + "Building classifier");

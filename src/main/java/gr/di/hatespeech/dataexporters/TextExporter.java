@@ -103,7 +103,10 @@ public class TextExporter implements DataExporter<Text> {
 			Utils.FILE_LOGGER.error(startingMessageLog + e.getMessage(),e);
 		}
 	}
-	
+
+	/**
+	 * Closes the CSV writer
+	 */
 	private void closeCsvWriter() {
 		try {
 			this.csvWriter.close();
@@ -112,6 +115,10 @@ public class TextExporter implements DataExporter<Text> {
 		}
 	}
 
+	/**
+	 * Creates header for the CSV file
+	 * @param headerRecord, an Array with the header values
+	 */
 	private void addHeaderLineToCsv(String[] headerRecord) {
 		if(headerRecord==null) {
 				headerRecord = new String[6];
@@ -125,6 +132,10 @@ public class TextExporter implements DataExporter<Text> {
 		csvWriter.writeNext(headerRecord);
 	}
 
+	/**
+	 * Creates a String array for a text
+	 * @param text, the text to be exported
+	 */
 	private void writeTweetsToCsv(Text text) {
 		String[] textArray = new String[6];
 		textArray[0] = text.getId().toString();
@@ -136,6 +147,9 @@ public class TextExporter implements DataExporter<Text> {
 		csvWriter.writeNext(textArray);
 	}
 
+	/**
+	 * Removes stopwords from all texts using TextPreprocessor
+	 */
 	public void removeStopWords() {
 		TextRepository textRepo = new TextRepository();
 		List<Text> texts = textRepo.findAllTexts();

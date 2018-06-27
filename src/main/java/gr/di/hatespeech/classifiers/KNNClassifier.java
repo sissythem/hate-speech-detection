@@ -7,6 +7,11 @@ import gr.di.hatespeech.utils.Utils;
 import weka.classifiers.lazy.IBk;
 import weka.core.Instances;
 
+/**
+ * Class that extends the BaseClassifier
+ * and implements cross validation or classification
+ * using KNN classifier from Weka library
+ */
 public class KNNClassifier extends BaseClassifier {
 	private static String startingMessageLog = "[" + KNNClassifier.class.getSimpleName() + "] ";
 	private IBk knn;

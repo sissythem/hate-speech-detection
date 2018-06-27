@@ -16,6 +16,11 @@ import gr.di.hatespeech.features.SyntaxFeatureExtractor;
 import gr.di.hatespeech.features.Word2VecFeatureExtractor;
 import gr.di.hatespeech.utils.Utils;
 
+/**
+ * Abstract class implementing DataExporter interface
+ * Exports data in database or in csv format
+ * @param <T>
+ */
 public abstract class AbstractDataExporter<T> implements DataExporter<T> {
 	private static String startingMessageLog = "[" + AbstractDataExporter.class.getSimpleName() + "] ";
 
@@ -36,6 +41,9 @@ public abstract class AbstractDataExporter<T> implements DataExporter<T> {
 		initFeatureExtractors();
 	}
 
+	/**
+	 * Initialization of Feature Extractors (i.e. bag of words, word2vec, ngrams etc)
+	 */
 	private void initFeatureExtractors() {
 		bowExtractor = new BOWFeaturesExtractor(Utils.HATEBASE_CSV_PATH, Utils.BOW_KEY_PREFIX);
 		word2vecExtractor = new Word2VecFeatureExtractor(config.getProperty(Utils.AGGREGATION_TYPE),
@@ -47,7 +55,12 @@ public abstract class AbstractDataExporter<T> implements DataExporter<T> {
 		syntaxFeatureExtractor = new SyntaxFeatureExtractor(Utils.ENGLISH_PCFG, Utils.SYNTAX_KEY_PREFIX,
 				Utils.SENTIMENT_KEY_PREFIX);
 	}
-	
+
+	/**
+	 * Uses provided configuration to extract Features from a given Text
+	 * @param text, the specific text to extract features
+	 * @return, a Map with features as keys and their values
+	 */
 	public Map<String, Double> getVectorFeatures(Text text) {
 		Map<String, Double> textFeatures = new HashMap<>();
 		if (Boolean.parseBoolean(config.getProperty(Utils.BOW))) {

@@ -7,6 +7,11 @@ import weka.core.Instances;
 
 import java.util.Random;
 
+/**
+ * Class that extends BaseClassifier and implements
+ * classification and cross validation methods using
+ * Random Forest classifier from Weka library
+ */
 public class RandomForestClassifier extends BaseClassifier {
     private static String startingMessageLog = "[" + RandomForestClassifier.class.getSimpleName() + "] ";
     private RandomForest rfClassifier;

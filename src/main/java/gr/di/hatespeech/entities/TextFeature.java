@@ -15,6 +15,10 @@ import javax.persistence.Table;
 
 import gr.di.hatespeech.utils.Utils;
 
+/**
+ * Represents an association between a text and a feature, providing also
+ * the value of this feature on the relevant text
+ */
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "texts_features")

@@ -18,6 +18,9 @@ import javax.validation.constraints.Size;
 
 import gr.di.hatespeech.utils.Utils;
 
+/**
+ * Represents a Feature(description and kind). Each text needs to have a value for each Feature
+ */
 @SuppressWarnings("serial")
 @Entity
 @Table(name= "features")

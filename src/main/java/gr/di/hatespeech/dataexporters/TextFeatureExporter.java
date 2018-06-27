@@ -26,12 +26,23 @@ public class TextFeatureExporter extends AbstractDataExporter<TextFeature>{
 	public TextFeatureExporter() {
 		super();
 	}
-	
+
+	/**
+	 * Method to export TextFeature objects into csv format
+	 * @param data, a list with TextFeature objects
+	 * @param headerRecord, the header of the csv
+	 * @param fileName, the file name
+	 * @param options, specific options to be used in csv file
+	 */
 	@Override
 	public void exportDataToCsv(List<TextFeature> data, String[] headerRecord, String fileName, CsvOptions options) {
-		
+		// TODO
 	}
 
+	/**
+	 * Method to export all TextFeature objects available (based on the texts)
+	 * into a database
+	 */
 	public void exportDataToDatabase() {
 		TextRepository textRepo = new TextRepository();
 		List<Text> texts = textRepo.findAllTexts().stream().filter(text -> !StringUtils.isBlank(text.getPrepMessage())).collect(Collectors.toList());
