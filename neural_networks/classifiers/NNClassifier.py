@@ -1,7 +1,8 @@
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import confusion_matrix
 from keras.models import Sequential
-from keras.layers import Dense, Activation
+from keras.layers import Dense, Activation, Dropout
+from keras.layers.noise import GaussianNoise
 import keras
 import numpy as np
 
@@ -41,6 +42,7 @@ def train_classifier(data, num_classes, train_labels, train_features):
         return mlp_classifier.fit(train_features, train_labels)
     elif nn_library == "keras":
         # Neural Network model using keras
+        data = data["keras"]
         print("Creating Sequential model in keras")
         # Create new model with the specified params in the config file
         data_dimension = train_features.shape[1]
@@ -49,6 +51,10 @@ def train_classifier(data, num_classes, train_labels, train_features):
         model = Sequential([
             Dense(data["hidden_layers_size"], input_shape=(data_dimension,), name="first_dense"),
             Activation('relu', name="first_activation"),
+            Dense(data["hidden_layers_size"], activation='relu', name="second_dense"),
+            Dropout(data["dropout"]),
+            Dense(data["hidden_layers_size"], activation='relu', name="third_dense"),
+            GaussianNoise(data["gaussian_noise"]),
             Dense(num_classes, name="Dense_to_numclasses"),
             Activation('softmax', name="classification_activation"),
         ])

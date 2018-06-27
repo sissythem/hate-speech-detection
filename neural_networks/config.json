@@ -3,10 +3,14 @@
   "path_to_instances":"/home/sissy/Documents/Professional/University/UOA/Graduate/Thesis/hate-speech-detection/instances/",
   "dataset_folder":"multilabel1",
   "feature_folder":"vector/spelling",
-  "neighbors":9,
-  "hidden_layers_size":100,
-  "epochs":10,
-  "batch_size":100,
   "classifiers":["NN"],
+  "neighbors":9,
+  "keras": {
+    "hidden_layers_size":100,
+    "epochs":100,
+    "batch_size":100,
+    "dropout":0.5,
+    "gaussian_noise":1.0
+  },
   "nn_library": "keras"
 }
