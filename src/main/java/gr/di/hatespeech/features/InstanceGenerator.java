@@ -153,51 +153,16 @@ public class InstanceGenerator {
 	 * @param foldNum, the current fold
 	 * @param filename, the file name where merged instances will be exported
 	 */
-	public void mergeAllGeneratedinstances(String startPath, int foldNum, String filename) {
+	public void mergeAllGeneratedinstances(String startPath, int foldNum, String filename, String mergeKind) {
 		try {
 			for (int i = 0; i < foldNum; i++) {
-				Utils.FILE_LOGGER.info(startingMessageLog + "Merging instances in fold " + i);
-				
-				Utils.FILE_LOGGER.info(startingMessageLog + "Reading graph instances");
-				Instances graphInstances = readInstancesFromFile(startPath + Utils.PATH_GRAPH_INSTANCES, i, filename);
-				
-				Utils.FILE_LOGGER.info(startingMessageLog + "Reading bow instances");
-				Instances bowInstances = readInstancesFromFile(startPath + Utils.PATH_BOW_INSTANCES, i, filename);
-				
-				Utils.FILE_LOGGER.info(startingMessageLog + "Reading sentiment instances");
-				Instances sentimentInstances = readInstancesFromFile(startPath + Utils.PATH_SENTIMENT_INSTANCES, i,
-						filename);
-				
-				Utils.FILE_LOGGER.info(startingMessageLog + "Reading syntax instances");
-				Instances syntaxInstances = readInstancesFromFile(startPath + Utils.PATH_SYNTAX_INSTANCES, i, filename);
-				
-				Utils.FILE_LOGGER.info(startingMessageLog + "Reading word2vec instances");
-				Instances word2vecInstances = readInstancesFromFile(startPath + Utils.PATH_WORD2VEC_INSTANCES, i,
-						filename);
-				
-				Utils.FILE_LOGGER.info(startingMessageLog + "Reading spelling instances");
-				Instances spellingInstances = readInstancesFromFile(startPath + Utils.PATH_SPELLING_INSTANCES, i,
-						filename);
-				
-				bowInstances = removeClassAttribute(bowInstances);
-				sentimentInstances = removeClassAttribute(sentimentInstances);
-				syntaxInstances = removeClassAttribute(syntaxInstances);
-				word2vecInstances = removeClassAttribute(word2vecInstances);
-				spellingInstances = removeClassAttribute(spellingInstances);
-				
-				Utils.FILE_LOGGER.info(startingMessageLog + "Merging graph and bow instances");
-				Instances instances = Instances.mergeInstances(graphInstances, bowInstances);
-				Utils.FILE_LOGGER.info(startingMessageLog + "Merging sentiment instances");
-				instances = Instances.mergeInstances(instances, sentimentInstances);
-				Utils.FILE_LOGGER.info(startingMessageLog + "Merging syntax instances");
-				instances = Instances.mergeInstances(instances, syntaxInstances);
-				Utils.FILE_LOGGER.info(startingMessageLog + "Merging spelling instances");
-				instances = Instances.mergeInstances(instances, spellingInstances);
-				Utils.FILE_LOGGER.info(startingMessageLog + "Merging word2vec instances");
-				instances = Instances.mergeInstances(instances, word2vecInstances);
-				instances.setClassIndex(0);
-				this.writeToFile(instances, startPath + Utils.PATH_ALL_INSTANCES, i, filename);
-				instances = null;
+				if(mergeKind.equalsIgnoreCase("all")) {
+					createAllInstances(startPath,i,filename);
+				} else if(mergeKind.equalsIgnoreCase("vectorAll")) {
+					createVectorAllInstances(startPath,i,filename);
+				} else if(mergeKind.equalsIgnoreCase("best")) {
+					createBestInstnaces(startPath, i , filename);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -219,6 +184,113 @@ public class InstanceGenerator {
 	    }
 
 	    return retI;
+	}
+
+	private void createAllInstances(String startPath, int i, String filename) {
+	    // TODO add ngrams and charngrams
+		Utils.FILE_LOGGER.info(startingMessageLog + "Merging instances in fold " + i);
+		Utils.FILE_LOGGER.info(startingMessageLog + "Reading graph instances");
+		Instances graphInstances = readInstancesFromFile(startPath + Utils.PATH_GRAPH_INSTANCES, i, filename);
+
+		Utils.FILE_LOGGER.info(startingMessageLog + "Reading bow instances");
+		Instances bowInstances = readInstancesFromFile(startPath + Utils.PATH_BOW_INSTANCES, i, filename);
+
+		Utils.FILE_LOGGER.info(startingMessageLog + "Reading sentiment instances");
+		Instances sentimentInstances = readInstancesFromFile(startPath + Utils.PATH_SENTIMENT_INSTANCES, i,
+				filename);
+
+		Utils.FILE_LOGGER.info(startingMessageLog + "Reading syntax instances");
+		Instances syntaxInstances = readInstancesFromFile(startPath + Utils.PATH_SYNTAX_INSTANCES, i, filename);
+
+		Utils.FILE_LOGGER.info(startingMessageLog + "Reading word2vec instances");
+		Instances word2vecInstances = readInstancesFromFile(startPath + Utils.PATH_WORD2VEC_INSTANCES, i,
+				filename);
+
+		Utils.FILE_LOGGER.info(startingMessageLog + "Reading spelling instances");
+		Instances spellingInstances = readInstancesFromFile(startPath + Utils.PATH_SPELLING_INSTANCES, i,
+				filename);
+
+		bowInstances = removeClassAttribute(bowInstances);
+		sentimentInstances = removeClassAttribute(sentimentInstances);
+		syntaxInstances = removeClassAttribute(syntaxInstances);
+		word2vecInstances = removeClassAttribute(word2vecInstances);
+		spellingInstances = removeClassAttribute(spellingInstances);
+
+		Utils.FILE_LOGGER.info(startingMessageLog + "Merging graph and bow instances");
+		Instances instances = Instances.mergeInstances(graphInstances, bowInstances);
+		Utils.FILE_LOGGER.info(startingMessageLog + "Merging sentiment instances");
+		instances = Instances.mergeInstances(instances, sentimentInstances);
+		Utils.FILE_LOGGER.info(startingMessageLog + "Merging syntax instances");
+		instances = Instances.mergeInstances(instances, syntaxInstances);
+		Utils.FILE_LOGGER.info(startingMessageLog + "Merging spelling instances");
+		instances = Instances.mergeInstances(instances, spellingInstances);
+		Utils.FILE_LOGGER.info(startingMessageLog + "Merging word2vec instances");
+		instances = Instances.mergeInstances(instances, word2vecInstances);
+		instances.setClassIndex(0);
+		this.writeToFile(instances, startPath + Utils.PATH_ALL_INSTANCES, i, filename);
+		this.instances = null;
+	}
+
+	private void createVectorAllInstances(String startPath, int i, String filename) {
+		// TODO add ngrams and charngrams
+		Utils.FILE_LOGGER.info(startingMessageLog + "Merging instances in fold " + i);
+		Utils.FILE_LOGGER.info(startingMessageLog + "Reading graph instances");
+		Utils.FILE_LOGGER.info(startingMessageLog + "Reading bow instances");
+		Instances bowInstances = readInstancesFromFile(startPath + Utils.PATH_BOW_INSTANCES, i, filename);
+
+		Utils.FILE_LOGGER.info(startingMessageLog + "Reading sentiment instances");
+		Instances sentimentInstances = readInstancesFromFile(startPath + Utils.PATH_SENTIMENT_INSTANCES, i,
+				filename);
+
+		Utils.FILE_LOGGER.info(startingMessageLog + "Reading syntax instances");
+		Instances syntaxInstances = readInstancesFromFile(startPath + Utils.PATH_SYNTAX_INSTANCES, i, filename);
+
+		Utils.FILE_LOGGER.info(startingMessageLog + "Reading word2vec instances");
+		Instances word2vecInstances = readInstancesFromFile(startPath + Utils.PATH_WORD2VEC_INSTANCES, i,
+				filename);
+		Utils.FILE_LOGGER.info(startingMessageLog + "Reading spelling instances");
+		Instances spellingInstances = readInstancesFromFile(startPath + Utils.PATH_SPELLING_INSTANCES, i,
+				filename);
+		sentimentInstances = removeClassAttribute(sentimentInstances);
+		syntaxInstances = removeClassAttribute(syntaxInstances);
+		word2vecInstances = removeClassAttribute(word2vecInstances);
+		spellingInstances = removeClassAttribute(spellingInstances);
+
+		Utils.FILE_LOGGER.info(startingMessageLog + "Merging bow with sentiment instances");
+		instances = Instances.mergeInstances(bowInstances, sentimentInstances);
+		Utils.FILE_LOGGER.info(startingMessageLog + "Merging syntax instances");
+		instances = Instances.mergeInstances(instances, syntaxInstances);
+		Utils.FILE_LOGGER.info(startingMessageLog + "Merging spelling instances");
+		instances = Instances.mergeInstances(instances, spellingInstances);
+		Utils.FILE_LOGGER.info(startingMessageLog + "Merging word2vec instances");
+		instances = Instances.mergeInstances(instances, word2vecInstances);
+		instances.setClassIndex(0);
+		this.writeToFile(instances, startPath + Utils.PATH_VECTOR_ALL_INSTANCES, i, filename);
+		this.instances = null;
+	}
+
+	private void createBestInstnaces(String startPath, int i, String filename) {
+		Utils.FILE_LOGGER.info(startingMessageLog + "Merging instances in fold " + i);
+		Utils.FILE_LOGGER.info(startingMessageLog + "Reading graph instances");
+		Instances graphInstances = readInstancesFromFile(startPath + Utils.PATH_GRAPH_INSTANCES, i, filename);
+
+		Utils.FILE_LOGGER.info(startingMessageLog + "Reading bow instances");
+		Instances bowInstances = readInstancesFromFile(startPath + Utils.PATH_BOW_INSTANCES, i, filename);
+
+		Utils.FILE_LOGGER.info(startingMessageLog + "Reading word2vec instances");
+		Instances word2vecInstances = readInstancesFromFile(startPath + Utils.PATH_WORD2VEC_INSTANCES, i,
+				filename);
+
+		bowInstances = removeClassAttribute(bowInstances);
+		word2vecInstances = removeClassAttribute(word2vecInstances);
+
+		Utils.FILE_LOGGER.info(startingMessageLog + "Merging graph and bow instances");
+		Instances instances = Instances.mergeInstances(graphInstances, bowInstances);
+		Utils.FILE_LOGGER.info(startingMessageLog + "Merging word2vec instances");
+		instances = Instances.mergeInstances(instances, word2vecInstances);
+		instances.setClassIndex(0);
+		this.writeToFile(instances, startPath + Utils.PATH_BEST_INSTANCES, i, filename);
+		this.instances = null;
 	}
 
 	public Instances getInstances() {

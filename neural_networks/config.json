@@ -1,9 +1,10 @@
 {
   "folds":10,
   "path_to_instances":"/home/sissy/Documents/Professional/University/UOA/Graduate/Thesis/hate-speech-detection/instances/",
-  "dataset_folder":"multilabel1",
-  "feature_folder":"vector/spelling",
-  "classifiers":["NN"],
+  "dataset_folder":"singlelabel",
+  "feature_folder":"best",
+  "classifiers":["NaiveBayes", "LogisticRegression", "RandomForest", "KNN", "NN"],
+  "nn_library": "keras",
   "neighbors":9,
   "keras": {
     "hidden_layers_size":100,
@@ -11,6 +12,5 @@
     "batch_size":100,
     "dropout":0.5,
     "gaussian_noise":1.0
-  },
-  "nn_library": "keras"
+  }
 }

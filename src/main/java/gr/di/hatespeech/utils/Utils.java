@@ -93,6 +93,7 @@ public class Utils {
 	public static final String PATH_ALL_INSTANCES = "all/fold";
 	public static final String PATH_GRAPH_INSTANCES = "graph/fold";
 	public static final String PATH_VECTOR_ALL_INSTANCES  ="vector/all/fold";
+	public static final String PATH_BEST_INSTANCES = "best/fold";
 	public static final String PATH_BOW_INSTANCES = "vector/bow/fold";
 	public static final String PATH_WORD2VEC_INSTANCES = "vector/word2vec/fold";
 	public static final String PATH_SYNTAX_INSTANCES = "vector/syntax/fold";

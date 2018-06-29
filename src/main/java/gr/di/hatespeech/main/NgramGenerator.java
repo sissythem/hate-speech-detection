@@ -42,17 +42,17 @@ public class NgramGenerator {
 	
 	public static void main(String[] args) {
 		NgramGenerator ngramGenerator = new NgramGenerator();
-//		ngramGenerator.mergeInstances();
-		ngramGenerator.getAllNgrams();
-		ngramGenerator.produceAllCharNGrams();
-		ngramGenerator.generateFeatures();
-		ngramGenerator.extractNgrams();
+		ngramGenerator.mergeInstances();
+//		ngramGenerator.getAllNgrams();
+//		ngramGenerator.produceAllCharNGrams();
+//		ngramGenerator.generateFeatures();
+//		ngramGenerator.extractNgrams();
 	}
 	
 	private void mergeInstances() {
 		InstanceGenerator instanceGenerator = new InstanceGenerator();
-		instanceGenerator.mergeAllGeneratedinstances("./instances/singlelabel/", 10, "train");
-		instanceGenerator.mergeAllGeneratedinstances("./instances/singlelabel/", 10, "test");
+		instanceGenerator.mergeAllGeneratedinstances("./instances/multilabel1/", 10, "train.arff", "best");
+		instanceGenerator.mergeAllGeneratedinstances("./instances/multilabel1/", 10, "test.arff", "best");
 	}
 
 	private void extractNgrams() {
