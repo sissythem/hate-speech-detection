@@ -49,7 +49,10 @@ def write_results_to_file(data, fold, classifier, confusion_matrix, test_labels_
     if classifier not in results:
         results[classifier] = []
     results[classifier].append(measure_tuples)
-    filename = "Result_test_" + classifier + ".txt"
+    if classifier == "NN":
+        filename = "Result_test_" + classifier + "_" + data["nn_library"] + ".txt"
+    else:
+        filename = "Result_test_" + classifier + ".txt"
     result_file = join(data["path_to_instances"], data["dataset_folder"], data["feature_folder"], fold, filename)
     with open(result_file, 'w') as f:
         confusion_matrix = "Confusion Matrix: " + str(confusion_matrix) + "\n"

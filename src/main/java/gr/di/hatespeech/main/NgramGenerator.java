@@ -43,25 +43,18 @@ public class NgramGenerator {
 	public static void main(String[] args) {
 		NgramGenerator ngramGenerator = new NgramGenerator();
 		ngramGenerator.mergeInstances();
-//		ngramGenerator.getAllNgrams();
-//		ngramGenerator.produceAllCharNGrams();
-//		ngramGenerator.generateFeatures();
-//		ngramGenerator.extractNgrams();
 	}
 	
 	private void mergeInstances() {
 		InstanceGenerator instanceGenerator = new InstanceGenerator();
-		instanceGenerator.mergeAllGeneratedinstances("./instances/multilabel1/", 10, "train.arff", "best");
-		instanceGenerator.mergeAllGeneratedinstances("./instances/multilabel1/", 10, "test.arff", "best");
+		instanceGenerator.mergeAllGeneratedinstances("./instances/singlelabel/", 10, "train.arff", "all");
+		instanceGenerator.mergeAllGeneratedinstances("./instances/singlelabel/", 10, "test.arff", "all");
+		instanceGenerator.mergeAllGeneratedinstances("./instances/singlelabel/", 10, "train.arff", "vectorAll");
+		instanceGenerator.mergeAllGeneratedinstances("./instances/singlelabel/", 10, "test.arff", "vectorAll");
 	}
 
-	private void extractNgrams() {
-		NgramFeatureExtractor ngramFeatureExtractor = new NgramFeatureExtractor(NGRAM_KEY_PREFIX);
-		CharacterNGramFeatureExtractor characterNGramFeatureExtractor = new CharacterNGramFeatureExtractor(CHAR_NGRAM_KEY_PREFIX);
-		extractTextFeatures(ngramFeatureExtractor, characterNGramFeatureExtractor);
-	}
 
-	private void extractTextFeatures(NgramFeatureExtractor ngramFeatureExtractor, CharacterNGramFeatureExtractor characterNGramFeatureExtractor) {
+	public void extractTextFeatures(NgramFeatureExtractor ngramFeatureExtractor, CharacterNGramFeatureExtractor characterNGramFeatureExtractor) {
 		TextRepository textRepo = new TextRepository();
 		FeatureRepository featureRepository = new FeatureRepository();
 		List<Text> texts = textRepo.findAllTexts().stream().filter(text -> !StringUtils.isBlank(text.getPrepMessage()) && text.getId()<30).collect(Collectors.toList());
@@ -97,7 +90,7 @@ public class NgramGenerator {
 		logger.info("Total time needed: " + Utils.toc(totalStart));
 	}
 
-	private void generateFeatures() {
+	public void generateFeatures() {
 		FeatureExporter featureExporter = new FeatureExporter();
 		NgramFeatureExtractor ngramFeatureExtractor = new NgramFeatureExtractor(NGRAM_KEY_PREFIX);
 		CharacterNGramFeatureExtractor characterNGramFeatureExtractor = new CharacterNGramFeatureExtractor(CHAR_NGRAM_KEY_PREFIX);
@@ -115,7 +108,7 @@ public class NgramGenerator {
 		factory.close();
 	}
 
-	public void addFeatureInDatabase(FeatureExporter featureExporter, EntityManager em, Entry<String, Double> entry) {
+	 private void addFeatureInDatabase(FeatureExporter featureExporter, EntityManager em, Entry<String, Double> entry) {
 		Feature feature = new Feature();
 		feature.setDescription(entry.getKey());
 		featureExporter.addKind(feature);
@@ -124,7 +117,7 @@ public class NgramGenerator {
 		em.getTransaction().commit();
 	}
 
-	private void getAllNgrams() {
+	 public void getAllNgrams() {
 		allTokens = new HashMap<>();
 		TextRepository textRepo = new TextRepository();
 		List<Text> texts = textRepo.findAllTexts();
@@ -155,7 +148,7 @@ public class NgramGenerator {
 		}
 	}
 
-	private void produceAllCharNGrams() {
+	public void produceAllCharNGrams() {
 		allTokens = new HashMap<>();
 		TextRepository textRepo = new TextRepository();
 		List<Text> texts = textRepo.findAllTexts();

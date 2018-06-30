@@ -1,8 +1,9 @@
 import classifiers.LogisticRegressionClassifier as lr
 import classifiers.RandomForestClassifier as rf
 import classifiers.NaiveBayesClassifier as nb
-import classifiers.NNClassifier as nn
+import classifiers.NNKerasClassifier as nnk
 import classifiers.KNNClassifier as knn
+import classifiers.NNScikitClassifier as nns
 
 
 def classify(data, classifier, num_classes, train_labels, train_features, test_labels, test_features):
@@ -17,8 +18,10 @@ def classify(data, classifier, num_classes, train_labels, train_features, test_l
     :param test_features: the features of all test instances
     :return: the confusion matrix of the classification
     """
-    if classifier == "NN":
-        return nn.classify(data, num_classes, train_labels, train_features, test_labels, test_features)
+    if classifier == "NN_keras":
+        return nnk.classify(data, num_classes, train_labels, train_features, test_labels, test_features)
+    elif classifier == "NN_scikit-learn":
+        return nns.classify(train_labels, train_features, test_labels, test_features)
     elif classifier == "KNN":
         return knn.classify(data, train_labels, train_features, test_labels, test_features)
     elif classifier == "NaiveBayes":

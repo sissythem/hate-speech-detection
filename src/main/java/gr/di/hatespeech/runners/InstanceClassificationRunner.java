@@ -87,7 +87,7 @@ public class InstanceClassificationRunner {
 	
 	/**
 	 * Get training texts from remaining folds
-	 * @return
+	 * @return a list with the texts
 	 */
 	private List<Text> getTrainingTexts(Map<Integer, List<Text>> tempFolds) {
 		// get training texts
@@ -111,7 +111,7 @@ public class InstanceClassificationRunner {
 
 	/**
 	 * Generate instances from scratch
-	 * @param i
+	 * @param i, the current fold
 	 * @param testTexts, list with the texts to be used for testing classifiers
 	 * @param trainingTexts, list with the texts to be used for training purposes
 	 */
@@ -176,7 +176,7 @@ public class InstanceClassificationRunner {
 	/**
 	 * Get a 90% of training instances, to create the two class Graphs
 	 * @param trainingTexts, list with the texts to be used for training purposes
-	 * @return, list with the texts to be used for class graphs construction
+	 * @return list with the texts to be used for class graphs construction
 	 */
 	protected List<Text> getTrainingDataForGraph(List<Text> trainingTexts) {
 		List<Text> trainingForClassGraph = new ArrayList<>();
@@ -226,7 +226,7 @@ public class InstanceClassificationRunner {
 		if (config.getProperty(Utils.DATASOURCE).equals("database")) {
 			List<TextFeature> temp = existingTextFeatures.stream().filter(tf -> tf.getText().getId().equals(text.getId())).collect(Collectors.toList());
 			if(!CollectionUtils.isEmpty(temp)) {
-				temp.stream().forEach(tf -> {
+				temp.forEach(tf -> {
 					textFeatures.put(tf.getFeature().getDescription(), tf.getValue());
 				});
 			}
@@ -246,7 +246,7 @@ public class InstanceClassificationRunner {
 	
 	protected Map<String,Double> initVectorMap() {
 		Map<String,Double> vectorFeatures = new HashMap<>();
-		existingFeatures.stream().forEach(feature -> vectorFeatures.put(feature.getDescription(), 0.0));
+		existingFeatures.forEach(feature -> vectorFeatures.put(feature.getDescription(), 0.0));
 		return vectorFeatures;
 	}
 
@@ -256,7 +256,7 @@ public class InstanceClassificationRunner {
 	 * @param allLabels, a list containing the label of each text
 	 * @param folderNumber, the current fold executing
 	 * @param filename, train or test
-	 * @return
+	 * @return Weka Instances object containing all given features
 	 */
 	protected Instances getInstances(List<Map<String, Double>> allFeatures, List<String> allLabels, int dataset, int folderNumber,
 			String filename) {

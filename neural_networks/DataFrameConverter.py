@@ -20,8 +20,10 @@ def convert_arff_to_dataframe(data, fold):
 
     with open(path_to_test_file) as f:
         test_df = a2p.load(f)
+        test_df = test_df.sample(frac=1)
     with open(path_to_train_file) as f:
         train_df = a2p.load(f)
+        train_df = train_df.sample(frac=1)
     return train_df, test_df
 
 

@@ -116,9 +116,9 @@ public class InstanceGenerator {
 			ArffSaver saver = new ArffSaver();
 			saver.setInstances(instances);
 			if(folderNumber == -1) {
-				saver.setFile(new File(startPath + "/" + filename + ".arff"));
+				saver.setFile(new File(startPath + "/" + filename ));
 			} else {
-				saver.setFile(new File(startPath + folderNumber + "/" + filename + ".arff"));
+				saver.setFile(new File(startPath + folderNumber + "/" + filename));
 			}
 			saver.writeBatch();
 		} catch (IOException e) {
@@ -169,6 +169,12 @@ public class InstanceGenerator {
 		}
 	}
 
+	/**
+	 * Remove class attribute from instances. We use class attribute only from the
+	 * first instances file
+	 * @param instances, instances weka object from which will be removed the class attributes
+	 * @return, the new instances object
+	 */
 	private Instances removeClassAttribute(Instances instances) {
 		
 		Remove af = new Remove();
@@ -186,8 +192,13 @@ public class InstanceGenerator {
 	    return retI;
 	}
 
+	/**
+	 * Merge all instances both graph and vector features
+	 * @param startPath, the path towards the specific dataset
+	 * @param i, the specific fold
+	 * @param filename, the filename to save the instances
+	 */
 	private void createAllInstances(String startPath, int i, String filename) {
-	    // TODO add ngrams and charngrams
 		Utils.FILE_LOGGER.info(startingMessageLog + "Merging instances in fold " + i);
 		Utils.FILE_LOGGER.info(startingMessageLog + "Reading graph instances");
 		Instances graphInstances = readInstancesFromFile(startPath + Utils.PATH_GRAPH_INSTANCES, i, filename);
@@ -210,11 +221,21 @@ public class InstanceGenerator {
 		Instances spellingInstances = readInstancesFromFile(startPath + Utils.PATH_SPELLING_INSTANCES, i,
 				filename);
 
+		Utils.FILE_LOGGER.info(startingMessageLog + "Reading ngram instances");
+		Instances ngramInstances = readInstancesFromFile(startPath + Utils.PATH_NGRAM_INSTANCES, i,
+				filename);
+
+		Utils.FILE_LOGGER.info(startingMessageLog + "Reading charngram instances");
+		Instances charngramInstances = readInstancesFromFile(startPath + Utils.PATH_CHARNGRAM_INSTANCES, i,
+				filename);
+
 		bowInstances = removeClassAttribute(bowInstances);
 		sentimentInstances = removeClassAttribute(sentimentInstances);
 		syntaxInstances = removeClassAttribute(syntaxInstances);
 		word2vecInstances = removeClassAttribute(word2vecInstances);
 		spellingInstances = removeClassAttribute(spellingInstances);
+		ngramInstances = removeClassAttribute(ngramInstances);
+		charngramInstances = removeClassAttribute(charngramInstances);
 
 		Utils.FILE_LOGGER.info(startingMessageLog + "Merging graph and bow instances");
 		Instances instances = Instances.mergeInstances(graphInstances, bowInstances);
@@ -226,13 +247,22 @@ public class InstanceGenerator {
 		instances = Instances.mergeInstances(instances, spellingInstances);
 		Utils.FILE_LOGGER.info(startingMessageLog + "Merging word2vec instances");
 		instances = Instances.mergeInstances(instances, word2vecInstances);
+		Utils.FILE_LOGGER.info(startingMessageLog + "Merging ngram instances");
+		instances = Instances.mergeInstances(instances, ngramInstances);
+		Utils.FILE_LOGGER.info(startingMessageLog + "Merging charngram instances");
+		instances = Instances.mergeInstances(instances, charngramInstances);
 		instances.setClassIndex(0);
 		this.writeToFile(instances, startPath + Utils.PATH_ALL_INSTANCES, i, filename);
 		this.instances = null;
 	}
 
+	/**
+	 * Merge all vector features in instances file
+	 * @param startPath, the path towards the specific dataset
+	 * @param i, the current fold
+	 * @param filename, the filename to save the instances
+	 */
 	private void createVectorAllInstances(String startPath, int i, String filename) {
-		// TODO add ngrams and charngrams
 		Utils.FILE_LOGGER.info(startingMessageLog + "Merging instances in fold " + i);
 		Utils.FILE_LOGGER.info(startingMessageLog + "Reading graph instances");
 		Utils.FILE_LOGGER.info(startingMessageLog + "Reading bow instances");
@@ -251,10 +281,21 @@ public class InstanceGenerator {
 		Utils.FILE_LOGGER.info(startingMessageLog + "Reading spelling instances");
 		Instances spellingInstances = readInstancesFromFile(startPath + Utils.PATH_SPELLING_INSTANCES, i,
 				filename);
+
+		Utils.FILE_LOGGER.info(startingMessageLog + "Reading ngram instances");
+		Instances ngramInstances = readInstancesFromFile(startPath + Utils.PATH_NGRAM_INSTANCES, i,
+				filename);
+
+		Utils.FILE_LOGGER.info(startingMessageLog + "Reading charngram instances");
+		Instances charngramInstances = readInstancesFromFile(startPath + Utils.PATH_CHARNGRAM_INSTANCES, i,
+				filename);
+
 		sentimentInstances = removeClassAttribute(sentimentInstances);
 		syntaxInstances = removeClassAttribute(syntaxInstances);
 		word2vecInstances = removeClassAttribute(word2vecInstances);
 		spellingInstances = removeClassAttribute(spellingInstances);
+		ngramInstances = removeClassAttribute(ngramInstances);
+		charngramInstances = removeClassAttribute(charngramInstances);
 
 		Utils.FILE_LOGGER.info(startingMessageLog + "Merging bow with sentiment instances");
 		instances = Instances.mergeInstances(bowInstances, sentimentInstances);
@@ -264,11 +305,21 @@ public class InstanceGenerator {
 		instances = Instances.mergeInstances(instances, spellingInstances);
 		Utils.FILE_LOGGER.info(startingMessageLog + "Merging word2vec instances");
 		instances = Instances.mergeInstances(instances, word2vecInstances);
+		Utils.FILE_LOGGER.info(startingMessageLog + "Merging ngram instances");
+		instances = Instances.mergeInstances(instances, ngramInstances);
+		Utils.FILE_LOGGER.info(startingMessageLog + "Merging charngram instances");
+		instances = Instances.mergeInstances(instances, charngramInstances);
 		instances.setClassIndex(0);
 		this.writeToFile(instances, startPath + Utils.PATH_VECTOR_ALL_INSTANCES, i, filename);
 		this.instances = null;
 	}
 
+	/**
+	 * Create Instances weka object with the top features (graph, bow and word2vec)
+	 * @param startPath, the path towards the specific path
+	 * @param i, the current fold
+	 * @param filename, the filename to save the Best Instances
+	 */
 	private void createBestInstnaces(String startPath, int i, String filename) {
 		Utils.FILE_LOGGER.info(startingMessageLog + "Merging instances in fold " + i);
 		Utils.FILE_LOGGER.info(startingMessageLog + "Reading graph instances");

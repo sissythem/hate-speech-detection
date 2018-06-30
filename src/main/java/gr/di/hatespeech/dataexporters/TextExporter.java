@@ -80,7 +80,6 @@ public class TextExporter implements DataExporter<Text> {
 	 */
 	@Override
 	public void exportDataToCsv(List<Text> texts, String[] headerRecord, String fileName, CsvOptions options) {
-
 		initCsvWriter(fileName, options);
 		addHeaderLineToCsv(headerRecord);
 		texts.forEach(text -> writeTweetsToCsv(text));

@@ -78,7 +78,6 @@ public class ClassificationRunner {
 				totalEvaluations.put(foldNumber, evals);
 				break;
 		}
-
 	}
 
 	/**

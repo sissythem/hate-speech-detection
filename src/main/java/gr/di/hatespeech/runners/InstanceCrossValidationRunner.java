@@ -25,10 +25,10 @@ public class InstanceCrossValidationRunner extends InstanceClassificationRunner 
         String isNewInstances = config.getProperty(Utils.INSTANCES);
         switch (isNewInstances) {
             case "new":
-                readInstancesFromFile();
+                generateNewInstances();
                 break;
             case "existing":
-                generateNewInstances();
+                readInstancesFromFile();
                 break;
             default:
                 Utils.FILE_LOGGER.info(startingMessageLog + "Not valid option for instances");

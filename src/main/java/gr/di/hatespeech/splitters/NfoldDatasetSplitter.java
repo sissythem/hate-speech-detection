@@ -208,7 +208,7 @@ public class NfoldDatasetSplitter {
 	
 	/**
 	 * Generate HashMap with N folds containing tweets labeled as sexist 
-	 * @param numFolds
+	 * @param numFolds the number of folds to be created
 	 */
 	protected void createSexismFolds(int numFolds) {
 		int sexismItems = sexismList.size() / numFolds;
@@ -233,7 +233,7 @@ public class NfoldDatasetSplitter {
 	/**
 	 * Get selected data source from Properties and export the data from either
 	 * database or csv
-	 * @param datasource
+	 * @param datasource either database or csv
 	 */
 	protected void fetchDataFromDatasource(String datasource, int dataset) {
 		if (datasource.equalsIgnoreCase("database")) {

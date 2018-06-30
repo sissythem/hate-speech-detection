@@ -54,6 +54,10 @@ public class Utils {
 	public static final String DATASET = "dataset";
 	public static final String TWEET_ID = "tweet_id";
 	public static final String PROCESSED_BODY = "processed_body";
+	public static final String DESCRIPTION = "description";
+	public static final String KIND = "kind";
+	public static final String TEXT_ID = "text_id";
+	public static final String FEATURE_ID = "feature_id";
 	
 	public static final String HATE_WORD = "hate_word";
 	public static final String WORD = "word";
