@@ -20,6 +20,12 @@ def classify(train_labels, train_features, test_labels, test_features):
 
 
 def train_classifier(train_labels, train_features):
+    """
+    Function to train the MLP Classifier
+    :param train_labels: the labels of each training instance
+    :param train_features: the features of the training instances
+    :return: the trained classifier
+    """
     # Neural Network using scikit-learn library
     print("Training MLP classifier from scikit-learn")
     # create new classifier
@@ -29,6 +35,13 @@ def train_classifier(train_labels, train_features):
 
 
 def test_classifier(classifier, test_labels, test_features):
+    """
+    Function for testing the classifier
+    :param classifier: the classifier to be trained
+    :param test_labels: the labels of the testing instances
+    :param test_features: the features of the testing instances
+    :return:
+    """
     # Test the classifier using scikit-learn and return the confusion matrix
     print("Testing scikit-learn MLP classifier")
     predicted_labels = classifier.predict(test_features)

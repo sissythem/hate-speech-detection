@@ -53,7 +53,6 @@ public class NgramGenerator {
 		instanceGenerator.mergeAllGeneratedinstances("./instances/singlelabel/", 10, "test.arff", "vectorAll");
 	}
 
-
 	public void extractTextFeatures(NgramFeatureExtractor ngramFeatureExtractor, CharacterNGramFeatureExtractor characterNGramFeatureExtractor) {
 		TextRepository textRepo = new TextRepository();
 		FeatureRepository featureRepository = new FeatureRepository();

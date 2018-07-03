@@ -1,6 +1,7 @@
 import DataFrameConverter as dfc
 from classifiers import Classifier
 from os.path import join
+import utils
 
 
 def run_fold(data, i, results):
@@ -12,6 +13,7 @@ def run_fold(data, i, results):
     :return: the results dictionary
     """
     print("Running fold: ", i)
+    start_time = utils.get_datetime()
     fold = "fold" + str(i)
     print("Reading and converting arff files")
     # use a converter for arff files to get pandas DataFrames
@@ -30,6 +32,8 @@ def run_fold(data, i, results):
         confusion_matrix = Classifier.classify(data, classifier, num_classes, train_labels, train_features, test_labels, test_features)
         # get micro/macro precision, recall and F-Measure for current fold
         results = write_results_to_file(data, fold, classifier, confusion_matrix, test_labels_dict, results)
+    time_needed = utils.elapsed_str(start_time, up_to=None)
+    print("Time needed to run fold ", str(i), " is ", time_needed)
     return results
 
 

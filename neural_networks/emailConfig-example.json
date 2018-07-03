@@ -1,0 +1,7 @@
+{
+	"sender_email": "sender",
+	"sender_pass": "password",
+	"recipient": "recipient",
+	"title": "title",
+	"message": "message"
+} 
