@@ -2,7 +2,7 @@
   "folds":10,
   "path_to_instances":"/home/sissy/Documents/Professional/University/UOA/Graduate/Thesis/hate-speech-detection/instances/",
   "dataset_folder":"singlelabel",
-  "feature_folder":"vector/word2vec",
+  "feature_folder":"vector/charngrams",
   "classifiers":["NaiveBayes", "LogisticRegression", "RandomForest", "KNN", "NN_keras", "NN_scikit-learn"],
   "neighbors":9,
   "keras": {

@@ -1,5 +1,6 @@
 import time, smtplib
 from email.mime.text import MIMEText
+import json
 
 
 def elapsed_str(previous_tic, up_to=None):
@@ -33,10 +34,13 @@ def send_email(config_email, time_needed):
     :param time_needed: difference between time-end and time-start
     :return:
     """
-    message = config_email["message"] + " Time needed: " + time_needed
+    message = config_email["message"] + " Time needed: " + time_needed + " and running in pc: " + config_email["pc_name"]
     msg = MIMEText(message)
+    msg['Subject'] = config_email["title"]
+    msg['From'] = config_email["sender_email"]
+    msg['To'] = config_email["recipient"]
     smtp = smtplib.SMTP('smtp.gmail.com:587')
     smtp.starttls()
     smtp.login(config_email["sender_email"], config_email["sender_pass"])
-    smtp.sendmail(config_email["sender_email"], config_email["recipient"], msg)
+    smtp.send_message(msg, config_email["sender_email"], config_email["recipient"])
     smtp.close()

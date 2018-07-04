@@ -3,5 +3,6 @@
 	"sender_pass": "password",
 	"recipient": "recipient",
 	"title": "title",
-	"message": "message"
+	"message": "message",
+	"pc_name": "pc"
 } 
