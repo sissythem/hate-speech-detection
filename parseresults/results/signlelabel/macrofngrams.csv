@@ -1,0 +1,13 @@
+features,classifiers,macrof
+charngrams,KNN,0.494
+charngrams,LogisticRegression,0.450
+charngrams,NaiveBayes,0.442
+charngrams,NNkeras,0.409
+charngrams,NNscikit-learn,0.507
+charngrams,RandomForest,0.494
+ngrams,KNN,0.493
+ngrams,LogisticRegression,0.461
+ngrams,NaiveBayes,0.440
+ngrams,NNkeras,0.385
+ngrams,NNscikit-learn,0.488
+ngrams,RandomForest,0.490
