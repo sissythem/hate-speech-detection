@@ -51,16 +51,19 @@ adding the database source and the driver.
 ## Datasets
 
 * Single Label:
-	* HateSpeech: 24871
-	*  Clean: 14839
+	* HateSpeech: 24463
+	*  Clean: 14548
+	* Total: 39011
 * Multi Label (Racism, Sexism, Clean):
-	* Racism: 1911
-	* Sexism: 3050
-   	* Clean: 10782
+	* Racism: 1910
+	* Sexism: 3035
+   	* Clean: 10543
+   	* Total: 15488
 * Multi Label (HateSpeech, OffensiveLanguage, Clean):
-   	* HateSpeech: 1407
-   	* OffensiveLanguage: 18503
-   	* Clean: 4057
+   	* HateSpeech: 1392
+   	* OffensiveLanguage: 18126
+   	* Clean: 4005
+   	* Total: 23523
 
 ## Classification
 
