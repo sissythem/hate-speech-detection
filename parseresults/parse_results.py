@@ -121,8 +121,10 @@ def visualize_results(results, filename):
     df = pd.DataFrame(results_list, columns=headers)
     print(df)
     df.pivot("feature", "algorithm", "microf").plot(kind='bar')
+    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
     plt.show()
-    plt.savefig(filename + '.png', bbox_inches='tight')
+    # plt.savefig(filename + '.png', bbox_inches='tight')
+    # plt.savefig("{}.png".format(filename))
 
 
 if __name__ == '__main__':
