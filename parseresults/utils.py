@@ -1,7 +1,7 @@
 from os.path import join
 
 instances_path = "/home/sissy/Documents/Professional/University/UOA/Graduate/Thesis/hate-speech-detection/instances/"
-dataset = "singlelabel"
+dataset = "multilabel1"
 
 graph_path = "graph"
 best_path = "best"

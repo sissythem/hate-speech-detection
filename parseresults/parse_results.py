@@ -1,8 +1,11 @@
 import utils
 from os.path import join
+import pandas as pd
+import matplotlib.pyplot as plt
 
+choices = ["csv", "latex", "plot"]
 multirow = True
-output = "csv"
+output = choices[2]
 
 
 def parse_results():
@@ -14,7 +17,7 @@ def parse_results():
         features = feature.split("/")
         feature_name = features[-1]
         if features[-2] == "vector" and features[-1] == "all":
-            feature_name = "vectorAll"
+            feature_name = "vector"
         results[feature_name] = {}
         for file in files_list:
             file_name_parts = file.split("_")
@@ -50,7 +53,7 @@ def separate_results(results):
     results_s = {}
 
     for feature in results:
-        if feature == "all" or feature == "vectorAll" or feature == "best":
+        if feature == "all" or feature == "vector" or feature == "best":
             results_all[feature] = results[feature]
         elif feature == "graph" or feature == "bow" or feature == "word2vec":
             results_best[feature] = results[feature]
@@ -106,6 +109,22 @@ def write_to_csv(results, filename, header, typef):
                 csvfile.write(feature + "," + algorithm + "," + "%2.3f" % favg + "\n")
 
 
+def visualize_results(results, filename):
+    results_list=[]
+    headers = ["algorithm", "feature", "microf"]
+    for feature in results:
+        for algorithm in results[feature]:
+            macro_f = float(results[feature][algorithm][0])
+            micro_f = float(results[feature][algorithm][1])
+            result_list = [algorithm, feature, micro_f]
+            results_list.append(result_list)
+    df = pd.DataFrame(results_list, columns=headers)
+    print(df)
+    df.pivot("feature", "algorithm", "microf").plot(kind='bar')
+    plt.show()
+    plt.savefig(filename + '.png', bbox_inches='tight')
+
+
 if __name__ == '__main__':
     results = parse_results()
     results_all, results_best, results_s, results_ngrams = separate_results(results)
@@ -133,3 +152,8 @@ if __name__ == '__main__':
         write_to_csv(results_graph, "microfgraph.csv", header_micro, "micro")
         write_to_csv(results_best_feat, "macrofbestfeat.csv", header_macro, "macro")
         write_to_csv(results_best_feat, "microfbestfeat.csv", header_micro, "micro")
+    elif output == "plot":
+        visualize_results(results_all, "combinations")
+        visualize_results(results_best, "best")
+        visualize_results(results_s, "sentimentgrammar")
+        visualize_results(results_ngrams, "ngrams")
