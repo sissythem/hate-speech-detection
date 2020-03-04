@@ -42,7 +42,6 @@ neural_networks/emailConfig.json
 
 # Project specific
 logs/
-jars/
 database/
 instances/
 src/main/resources/META-INF/persistence.xml

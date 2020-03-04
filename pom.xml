@@ -204,18 +204,15 @@
 		</dependency>
 
 		<!-- LOGGER dependencies -->
-		<!-- https://mvnrepository.com/artifact/log4j/log4j -->
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.13.1</version>
 		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/log4j/apache-log4j-extras -->
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>apache-log4j-extras</artifactId>
-			<version>1.2.17</version>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.13.1</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.jboss.logging/jboss-logging -->
